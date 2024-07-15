@@ -1,3 +1,5 @@
+package com.master.laser;
+
 import java.time.LocalDateTime;
 
 public class TaskLaserPrinter {
