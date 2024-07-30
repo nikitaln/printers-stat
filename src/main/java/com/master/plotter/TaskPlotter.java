@@ -7,9 +7,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 /**
  * В excel создаем CSV-файл, затем его сохраняем в txt-файл с кодировкой UTF-8
@@ -21,9 +20,8 @@ import java.util.stream.Collectors;
 
 public class TaskPlotter {
 
-    private String csvPath = "C:\\Users\\lukanin_ns\\Downloads\\xl8000.csv";
-    private String startDate = "08.07.2024";
-    private String endDate = "12.07.2024";
+    private String startDate = "15.07.2024";
+    private String endDate = "21.07.2024";
 
     public void parsingTxtFile(String path) {
 
@@ -38,10 +36,7 @@ public class TaskPlotter {
 
         try {
 
-            System.out.println("Проверка1");
             List<String> lines = Files.readAllLines(filePath);
-            System.out.println("Проверка2");
-
 
             for (String line : lines) {
 
@@ -89,7 +84,7 @@ public class TaskPlotter {
                     String date = getStringDateWithoutTime(fragments[15]);
                     LocalDate localDate = getLocalDateFromString(date);
 
-                    if (fragments[8].contains("особоплотная") &&
+                    if (fragments[8].contains("Обычная") &&
                             startLocalDate.minusDays(1).isBefore(localDate) &&
                             endLocalDate.plusDays(1).isAfter(localDate)) {
 
@@ -98,8 +93,6 @@ public class TaskPlotter {
                         allLengthPaper = allLengthPaper + doubleLengthPaper;
                         System.out.println(fragments[15]);
                     }
-
-
                 }
             }
         } catch (IOException e) {

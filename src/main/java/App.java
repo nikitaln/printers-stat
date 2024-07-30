@@ -1,12 +1,25 @@
-import com.master.plotter.TaskPlotter;
+import com.master.plotter.TaskPlotterService;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class App {
 
-    public static void main(String[] args) {
-        TaskPlotter taskPlotter = new TaskPlotter();
-        taskPlotter.parsingTxtFile("C:\\Users\\lukanin_ns\\Downloads\\xl8000.txt");
+    static TaskPlotterService plotterService;
 
+    public static void main(String[] args) {
+//        TaskPlotter taskPlotter = new TaskPlotter();
+//        taskPlotter.parsingTxtFile("C:\\Users\\lukanin_ns\\Downloads\\xl80002.txt");
+        plotterService = new TaskPlotterService();
+        plotterService.parseWebPrinterStatistics("hello");
     }
+
+
+
 
 
 //    private static String path = "C:\\Users\\lukanin_ns\\Desktop\\test-java-folder\\versant_stat_2406_3006.txt";
