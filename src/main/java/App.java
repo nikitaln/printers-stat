@@ -1,4 +1,5 @@
 import com.master.plotter.TaskPlotterService;
+import com.master.plotter.TaskPlotterStorage;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -15,7 +16,8 @@ public class App {
 //        TaskPlotter taskPlotter = new TaskPlotter();
 //        taskPlotter.parsingTxtFile("C:\\Users\\lukanin_ns\\Downloads\\xl80002.txt");
         plotterService = new TaskPlotterService();
-        plotterService.parseWebPrinterStatistics("hello");
+        plotterService.parseWebPrinterStatistics("hi");
+
     }
 
 

@@ -139,6 +139,24 @@ public class TaskPlotter {
         this.printType = printType;
     }
 
+    @Override
+    public String toString() {
+        return "TaskPlotter{" +
+                "taskName='" + taskName + '\'' +
+                ", taskType='" + taskType + '\'' +
+                ", source='" + source + '\'' +
+                ", output='" + output + '\'' +
+                ", status='" + status + '\'' +
+                ", copyCount=" + copyCount +
+                ", paperType='" + paperType + '\'' +
+                ", paperConsumption=" + paperConsumption +
+                ", paperLengthConsumption=" + paperLengthConsumption +
+                ", tonerConsumption=" + tonerConsumption +
+                ", user='" + user + '\'' +
+                ", dateTime=" + dateTime +
+                ", printType='" + printType + '\'' +
+                '}';
+    }
 
     //    private String startDate = "15.07.2024";
 //    private String endDate = "21.07.2024";

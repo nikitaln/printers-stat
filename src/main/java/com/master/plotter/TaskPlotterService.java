@@ -8,29 +8,38 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TaskPlotterService {
 
     private TaskPlotter taskPlotter;
+    private TaskPlotterStorage taskPlotterStorage;
 
 
     //парсинг веб-страницы HP
     public void parseWebPrinterStatistics(String path) {
+        taskPlotterStorage = new TaskPlotterStorage();
 
-        Connection connection = Jsoup.connect("http://npic5e08b/hp/device/webAccess/index.htm;jsessionid=blir95p7c1?content=accounting").maxBodySize(Integer.MAX_VALUE);
+        Connection connection = Jsoup
+                .connect("http://npic5e08b/hp/device/webAccess/index.htm;jsessionid=blir95p7c1?content=accounting")
+                .maxBodySize(Integer.MAX_VALUE);
 
         try {
 
             Document document = connection.get();
-            Elements table = document.select("table").get(4).getElementsByClass("treeTableTitleRowClosed treeTableTopLevel");
-
-            //Elements elementsRows = table.select("tr");
+            Elements table = document.select("table")
+                    .get(4).
+                    getElementsByClass("treeTableTitleRowClosed treeTableTopLevel");
 
             //создание объектов Задачи
             for (Element row : table) {
                 Elements cols = row.select("td");
-                createTaskPlotterObject(cols);
+//                createTaskPlotterObject(cols);
+                taskPlotterStorage
+                        .addTaskPlotter(createTaskPlotterObject(cols));
+
+
 //                System.out.println(cols.get(0).text()); //имя файла
 //                System.out.println(cols.get(1).text()); //тип задания
 //                System.out.println(cols.get(2).text()); //источник задания
@@ -50,6 +59,9 @@ public class TaskPlotterService {
 //                System.out.println(cols.get(16).text());    //дата
 //                System.out.println(cols.get(17).text());    //качество печати
             }
+
+            taskPlotterStorage.printAllTaskPlotter();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -57,7 +69,7 @@ public class TaskPlotterService {
 
 
 
-    public TaskPlotter createTaskPlotterObject(Elements cols) {
+    private TaskPlotter createTaskPlotterObject(Elements cols) {
 
         taskPlotter = new TaskPlotter();
         taskPlotter.setTaskName(cols.get(0).text());
@@ -79,48 +91,88 @@ public class TaskPlotterService {
         taskPlotter.setUser(cols.get(15).text());
         taskPlotter.setDateTime(
                 getLocalDateTimeFromString(cols.get(16).text()));
-        taskPlotter.setPaperType(cols.get(17).text());
+        taskPlotter.setPrintType(cols.get(17).text());
 
         return taskPlotter;
     }
 
 
 
-    public double getPaperConsumptionFromString(String paperSquare) {
+    private double getPaperConsumptionFromString(String paperSquare) {
         //input - 1,0710 м²
         //output - 1,0710
-
-        return 0.0;
+        //String square = "1,0710 м²";
+        String regex = "[0-9]";
+        String squareDigitStr = "";
+        for (int i = 0; i < paperSquare.length(); i++) {
+            char symbol = paperSquare.charAt(i);
+            String symbolStr = String.valueOf(symbol);
+            if (symbolStr.matches(regex) || symbolStr.equals(",")) {
+                squareDigitStr = squareDigitStr + symbolStr;
+            }
+        }
+        squareDigitStr = squareDigitStr.replace(",", ".");
+        return Double.valueOf(squareDigitStr);
     }
 
 
 
-    public double getPaperLengthConsumptionFromString(String paperLength) {
+    private double getPaperLengthConsumptionFromString(String paperLength) {
         //input - 1,2700 м
         //output - 1,2700
-        return 0.0;
+        //String paperLength = "1,2700 м";
+        String regex = "[0-9]";
+        String lengthDigitStr = "";
+        for (int i = 0; i < paperLength.length(); i++) {
+            char symbol = paperLength.charAt(i);
+            String symbolStr = String.valueOf(symbol);
+            if (symbolStr.matches(regex) || symbolStr.equals(",")) {
+                lengthDigitStr = lengthDigitStr + symbolStr;
+            }
+        }
+        lengthDigitStr = lengthDigitStr.replace(",", ".");
+        return Double.valueOf(lengthDigitStr);
     }
 
 
 
-    public double getTonerConsumptionFromString(String toner) {
-        //input - 1,54 мл.
-        //output - 1,54
-        return 0.0;
+    private double getTonerConsumptionFromString(String toner) {
+        String regex = "[0-9]";
+        String tonerDigitStr = "";
+        for (int i = 0; i < toner.length(); i++) {
+            char symbol = toner.charAt(i);
+            String symbolStr = String.valueOf(symbol);
+            if (symbolStr.matches(regex) || symbolStr.equals(",")) {
+                tonerDigitStr = tonerDigitStr + symbolStr;
+            }
+        }
+        tonerDigitStr = tonerDigitStr.replace(",", ".");
+        return Double.valueOf(tonerDigitStr);
     }
 
 
 
-    public LocalDateTime getLocalDateTimeFromString(String dateTime) {
-        //18.07.2024 16:08:11
-        return null;
+    private LocalDateTime getLocalDateTimeFromString(String dateTime) {
+        //input - 18.07.2024 16:08:11
+        if (dateTime.length() < 19) {
+            for (int i = 0; i < dateTime.length(); i++) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy H:mm:ss");
+                LocalDateTime localDateTime = LocalDateTime.parse(dateTime, formatter);
+                return localDateTime;
+            }
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
+        LocalDateTime localDateTime = LocalDateTime.parse(dateTime, formatter);
+        return localDateTime;
     }
 
 
     //Первый способ
-    public void parseWebPrinterStatisticsWithoutUseTable() {
+    private void parseWebPrinterStatisticsWithoutUseTable() {
 
-        Connection connection = Jsoup.connect("http://npic5e08b/hp/device/webAccess/index.htm;jsessionid=blir95p7c1?content=accounting").maxBodySize(Integer.MAX_VALUE);
+        Connection connection = Jsoup
+                .connect("http://npic5e08b/hp/device/webAccess/index.htm;jsessionid=blir95p7c1?content=accounting")
+                .maxBodySize(Integer.MAX_VALUE);
         try {
             AtomicInteger i = new AtomicInteger();
             AtomicInteger j = new AtomicInteger();
