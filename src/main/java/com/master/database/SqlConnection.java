@@ -1,4 +1,4 @@
-package com.master.db;
+package com.master.database;
 
 import com.master.laser.TaskLaserPrinter;
 
@@ -9,7 +9,7 @@ import java.sql.Statement;
 
 public class SqlConnection {
 
-    private String url = "jdbc:mysql://localhost:3306/print_center";
+    private String url = "jdbc:mysql://localhost:3306/printers_stat";
     private String user = "root";
     private String pass = "1234";
 

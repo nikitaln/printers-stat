@@ -13,16 +13,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class TaskPlotterService {
 
+
     private TaskPlotter taskPlotter;
     private TaskPlotterStorage taskPlotterStorage;
 
 
     //парсинг веб-страницы HP
     public void parseWebPrinterStatistics(String path) {
+
         taskPlotterStorage = new TaskPlotterStorage();
 
         Connection connection = Jsoup
-                .connect("http://npic5e08b/hp/device/webAccess/index.htm;jsessionid=blir95p7c1?content=accounting")
+                .connect(path)
                 .maxBodySize(Integer.MAX_VALUE);
 
         try {
@@ -35,10 +37,9 @@ public class TaskPlotterService {
             //создание объектов Задачи
             for (Element row : table) {
                 Elements cols = row.select("td");
-//                createTaskPlotterObject(cols);
+
                 taskPlotterStorage
                         .addTaskPlotter(createTaskPlotterObject(cols));
-
 
 //                System.out.println(cols.get(0).text()); //имя файла
 //                System.out.println(cols.get(1).text()); //тип задания
@@ -217,5 +218,11 @@ public class TaskPlotterService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+
+    private void parseTxtFileStatistics(String path) {
+
     }
 }
