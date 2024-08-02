@@ -20,4 +20,10 @@ public class TaskPlotterStorage {
             System.out.println(task.toString());
         }
     }
+
+
+
+    public List<TaskPlotter> getAllPlotterTasks() {
+        return taskPlotterList.stream().toList();
+    }
 }

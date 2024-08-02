@@ -16,6 +16,7 @@ public class TaskPlotterService {
 
     private TaskPlotter taskPlotter;
     private TaskPlotterStorage taskPlotterStorage;
+    private TaskPlotterDBConnection taskPlotterDBConnection;
 
 
     //парсинг веб-страницы HP
@@ -62,6 +63,9 @@ public class TaskPlotterService {
             }
 
             taskPlotterStorage.printAllTaskPlotter();
+            taskPlotterDBConnection = new TaskPlotterDBConnection();
+            taskPlotterDBConnection.createTable();
+            taskPlotterDBConnection.addAllTaskPlotter(taskPlotterStorage.getAllPlotterTasks());
 
         } catch (IOException e) {
             throw new RuntimeException(e);

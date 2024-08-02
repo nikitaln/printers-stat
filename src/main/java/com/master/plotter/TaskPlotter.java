@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 public class TaskPlotter {
 
+    private int id;
     private String taskName;
     private String taskType;
     private String source;
@@ -20,6 +21,13 @@ public class TaskPlotter {
     private String printType;
 
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getTaskName() {
         return taskName;
