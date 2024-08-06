@@ -118,4 +118,17 @@ public class TaskPlotterDBConnection {
     }
 
 
+
+    public void getCountOfHeavyPaperForPeriod(String period) {
+
+    }
+
+
+
+    public void getCountOfThinPaperForPeriod(String period) {
+
+    }
+
+
+
 }
