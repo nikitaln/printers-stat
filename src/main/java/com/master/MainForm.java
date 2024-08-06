@@ -1,6 +1,8 @@
 package com.master;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MainForm {
     private JPanel mainJPanel;
@@ -18,4 +20,25 @@ public class MainForm {
     private JTextArea textArea2;
     private JButton rightSaveDbButton;
     private JButton leftSaveDbButton;
+    private JLabel leftPathWithTxtFileLabel;
+    private JTextField leftPathTextField;
+
+
+
+    public MainForm() {
+        rightButtonSearch.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(rightDateTextField.getText());
+            }
+        });
+    }
+
+
+
+    public JPanel getMainJPanel() {
+        return mainJPanel;
+    }
+
+
 }
