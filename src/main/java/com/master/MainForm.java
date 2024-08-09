@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainForm {
@@ -46,8 +47,15 @@ public class MainForm {
                 rightTextArea.setText("");
                 String date = rightDateTextField.getText();
                 if (mainFormService.isCorrectDateFormat(date)) {
-                    List<LocalDate> dateList = mainFormService.getAllDaysBetweenTwoDates(date);
-                    plotterService.parseWebPrinterStatistics(dateList);
+
+                    if (!mainFormService.isOneDay(date)) {
+                        List<LocalDate> dateList = mainFormService.getAllDaysBetweenTwoDates(date);
+                        plotterService.parseWebPrinterStatistics(dateList);
+                    } else {
+                        List<LocalDate> dateListWithOneDate = new ArrayList<>();
+                        dateListWithOneDate.add(mainFormService.getLocalDateFromString(date));
+                        plotterService.parseWebPrinterStatistics(dateListWithOneDate);
+                    }
                 }
 
                 rightTextArea.append("Отчет за период: " + date + "\n\n"

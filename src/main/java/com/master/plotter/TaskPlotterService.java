@@ -216,12 +216,6 @@ public class TaskPlotterService {
 
 
 
-    private void parseTxtFileStatistics(String path) {
-
-    }
-
-
-
     private boolean isEqualInputUserDate(LocalDateTime localDateTime, List<LocalDate> dates) {
 
         for (LocalDate date : dates) {
@@ -238,8 +232,19 @@ public class TaskPlotterService {
         return taskPlotterStorage.getLengthHeavyPaper();
     }
 
+
+
     public double getLengthThinPaper() {
         return taskPlotterStorage.getLengthThinPaper();
+    }
+
+
+
+    private void parseTxtFileStatistics(String path) {
+
+
+
+
     }
 }
 
