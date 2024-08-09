@@ -26,4 +26,17 @@ public class TaskPlotterStorage {
     public List<TaskPlotter> getAllPlotterTasks() {
         return taskPlotterList.stream().toList();
     }
+
+
+
+    public double getLengthHeavyPaper() {
+        double length = 0;
+
+        for (TaskPlotter task : taskPlotterList) {
+            if (task.getPaperType().contains("особоплотная бумага")) {
+                length = length + task.getPaperLengthConsumption();
+            }
+        }
+        return length;
+    }
 }

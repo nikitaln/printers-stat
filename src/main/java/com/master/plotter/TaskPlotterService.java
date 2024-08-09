@@ -7,8 +7,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TaskPlotterService {
@@ -18,9 +20,11 @@ public class TaskPlotterService {
     private TaskPlotterStorage taskPlotterStorage;
     private TaskPlotterDBConnection taskPlotterDBConnection;
 
+    private String path = "http://npic5e08b/hp/device/webAccess/index.htm;jsessionid=blir95p7c1?content=accounting";
+
 
     //парсинг веб-страницы HP
-    public void parseWebPrinterStatistics(String path) {
+    public void parseWebPrinterStatistics(List<LocalDate> dates) {
 
         taskPlotterStorage = new TaskPlotterStorage();
 
@@ -39,33 +43,19 @@ public class TaskPlotterService {
             for (Element row : table) {
                 Elements cols = row.select("td");
 
-                taskPlotterStorage
-                        .addTaskPlotter(createTaskPlotterObject(cols));
+                //если задача попадает в нужную дату, то создаем задачу
+                if (isEqualInputUserDate(getLocalDateTimeFromString(cols.get(16).text()), dates)) {
 
-//                System.out.println(cols.get(0).text()); //имя файла
-//                System.out.println(cols.get(1).text()); //тип задания
-//                System.out.println(cols.get(2).text()); //источник задания
-//                System.out.println(cols.get(3).text()); //выход задания на печать
-//                System.out.println(cols.get(4).text()); //состояние (отпечатано)
-//                System.out.println(cols.get(5).text()); //копии
-//                System.out.println(cols.get(6).text()); //тип затрат (НЕ РАБОТАЕТ)
-//                System.out.println(cols.get(7).text()); //тип затрат (Всего)
-//                System.out.println(cols.get(8).text()); //НЕ РАБОТАЕТ
-//                System.out.println(cols.get(9).text()); //значение затрат
-//                System.out.println(cols.get(10).text());    //тип бумаги
-//                System.out.println(cols.get(11).text());    //расход бумаги
-//                System.out.println(cols.get(12).text());    //длина бумаги
-//                System.out.println(cols.get(13).text());    //одна категория
-//                System.out.println(cols.get(14).text());    //использование чернил
-//                System.out.println(cols.get(15).text());    //имя пользователя
-//                System.out.println(cols.get(16).text());    //дата
-//                System.out.println(cols.get(17).text());    //качество печати
+                    System.out.println(cols.get(0).text()); //имя файла
+                    taskPlotterStorage.addTaskPlotter(createTaskPlotterObject(cols));
+
+                }
             }
 
             taskPlotterStorage.printAllTaskPlotter();
-            taskPlotterDBConnection = new TaskPlotterDBConnection();
-            taskPlotterDBConnection.createTable();
-            taskPlotterDBConnection.addAllTaskPlotter(taskPlotterStorage.getAllPlotterTasks());
+//            taskPlotterDBConnection = new TaskPlotterDBConnection();
+//            taskPlotterDBConnection.createTable();
+//            taskPlotterDBConnection.addAllTaskPlotter(taskPlotterStorage.getAllPlotterTasks());
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -229,4 +219,41 @@ public class TaskPlotterService {
     private void parseTxtFileStatistics(String path) {
 
     }
+
+
+
+    private boolean isEqualInputUserDate(LocalDateTime localDateTime, List<LocalDate> dates) {
+
+        for (LocalDate date : dates) {
+            if (date.isEqual(localDateTime.toLocalDate())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+    public double getLengthHeavyPaper() {
+        return taskPlotterStorage.getLengthHeavyPaper();
+    }
 }
+
+//                System.out.println(cols.get(0).text()); //имя файла
+//                System.out.println(cols.get(1).text()); //тип задания
+//                System.out.println(cols.get(2).text()); //источник задания
+//                System.out.println(cols.get(3).text()); //выход задания на печать
+//                System.out.println(cols.get(4).text()); //состояние (отпечатано)
+//                System.out.println(cols.get(5).text()); //копии
+//                System.out.println(cols.get(6).text()); //тип затрат (НЕ РАБОТАЕТ)
+//                System.out.println(cols.get(7).text()); //тип затрат (Всего)
+//                System.out.println(cols.get(8).text()); //НЕ РАБОТАЕТ
+//                System.out.println(cols.get(9).text()); //значение затрат
+//                System.out.println(cols.get(10).text());    //тип бумаги
+//                System.out.println(cols.get(11).text());    //расход бумаги
+//                System.out.println(cols.get(12).text());    //длина бумаги
+//                System.out.println(cols.get(13).text());    //одна категория
+//                System.out.println(cols.get(14).text());    //использование чернил
+//                System.out.println(cols.get(15).text());    //имя пользователя
+//                System.out.println(cols.get(16).text());    //дата
+//                System.out.println(cols.get(17).text());    //качество печати
