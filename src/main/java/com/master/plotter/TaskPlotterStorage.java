@@ -1,5 +1,6 @@
 package com.master.plotter;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +38,25 @@ public class TaskPlotterStorage {
                 length = length + task.getPaperLengthConsumption();
             }
         }
-        return length;
+
+        double roundedNumber = Math.round(length * 100.0) / 100.0;
+        System.out.println("Общая длина плотная бум=" + roundedNumber);
+        return roundedNumber;
+    }
+
+
+
+    public double getLengthThinPaper() {
+        double length = 0;
+
+        for (TaskPlotter task : taskPlotterList) {
+            if (task.getPaperType().contains("обычная") || task.getPaperType().contains("Обычная")) {
+                length = length + task.getPaperLengthConsumption();
+            }
+        }
+
+        double roundedNumber = Math.round(length * 100.0) / 100.0;
+        System.out.println("Общая длина тонкая бум=" + roundedNumber);
+        return roundedNumber;
     }
 }

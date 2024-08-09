@@ -237,6 +237,10 @@ public class TaskPlotterService {
     public double getLengthHeavyPaper() {
         return taskPlotterStorage.getLengthHeavyPaper();
     }
+
+    public double getLengthThinPaper() {
+        return taskPlotterStorage.getLengthThinPaper();
+    }
 }
 
 //                System.out.println(cols.get(0).text()); //имя файла

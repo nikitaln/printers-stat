@@ -22,8 +22,8 @@ public class MainForm {
     private JLabel rightInputDateLabel;
     private JButton leftButtonSearch;
     private JButton rightButtonSearch;
-    private JTextArea textArea1;
-    private JTextArea textArea2;
+    private JTextArea leftTextArea;
+    private JTextArea rightTextArea;
     private JButton rightSaveDbButton;
     private JButton leftSaveDbButton;
     private JLabel leftPathWithTxtFileLabel;
@@ -43,13 +43,16 @@ public class MainForm {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                rightTextArea.setText("");
                 String date = rightDateTextField.getText();
                 if (mainFormService.isCorrectDateFormat(date)) {
                     List<LocalDate> dateList = mainFormService.getAllDaysBetweenTwoDates(date);
                     plotterService.parseWebPrinterStatistics(dateList);
                 }
 
-                textArea2.append("Плотная бумага = " + plotterService.getLengthHeavyPaper() + "м");
+                rightTextArea.append("Отчет за период: " + date + "\n\n"
+                        + "Плотная бумага=" + plotterService.getLengthHeavyPaper() + "м" + "\n"
+                        + "Обычная бумага=" + plotterService.getLengthThinPaper() + "м");
             }
         });
     }
