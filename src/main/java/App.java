@@ -26,6 +26,9 @@ public class App {
 //        frame.setLocationRelativeTo(null);
 //        frame.setVisible(true);
 
+
+
+
         TaskPlotterServiceParseFile parseFile = new TaskPlotterServiceParseFile();
         parseFile.parseTxtFileWithHpStat();
 

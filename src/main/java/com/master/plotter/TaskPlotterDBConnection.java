@@ -106,6 +106,8 @@ public class TaskPlotterDBConnection {
                             " dateTime," +
                             " printType) VALUES" + sqlFinal);
             System.out.println("таблица plotter_stat заполнена");
+            statement.close();
+            connection.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

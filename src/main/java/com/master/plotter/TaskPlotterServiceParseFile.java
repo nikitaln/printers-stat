@@ -12,9 +12,10 @@ import java.util.List;
 public class TaskPlotterServiceParseFile {
 
     TaskPlotterStorage taskPlotterStorage;
+    TaskPlotterDBConnection dbConnection;
 
 
-    private String path = "C:\\Users\\lukanin_ns\\Downloads\\hp8000\\1.txt";
+    private String path = "C:\\Users\\lukanin_ns\\Downloads\\hp8000\\test.txt";
     private String startDate = "08.07.2024";
     private String endDate = "12.07.2024";
 
@@ -23,6 +24,8 @@ public class TaskPlotterServiceParseFile {
     public void parseTxtFileWithHpStat() {
 
         taskPlotterStorage = new TaskPlotterStorage();
+
+
         File file = new File(path);
         Path filePath = Paths.get(path);
 
@@ -40,7 +43,15 @@ public class TaskPlotterServiceParseFile {
                 }
             }
 
-            taskPlotterStorage.printAllTaskPlotter();
+            dbConnection = new TaskPlotterDBConnection();
+            dbConnection.getConnection();
+            dbConnection.createTable();
+            dbConnection.addAllTaskPlotter(taskPlotterStorage.getAllPlotterTasks());
+
+
+            System.out.println("данные сохранены в БД");
+
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -75,7 +86,6 @@ public class TaskPlotterServiceParseFile {
         taskPlotter.setSource(fragments[2]);
         taskPlotter.setOutput(fragments[3]);
         taskPlotter.setStatus(fragments[4]);
-        System.out.println(fragments[5] + "     " + fragments[16]);
         taskPlotter.setCopyCount(Integer.parseInt(fragments[5]));
         taskPlotter.setPaperType(fragments[8]);
 
@@ -94,6 +104,7 @@ public class TaskPlotterServiceParseFile {
 
     private LocalDateTime getLocalDateTimeFromString(String dateTime) {
         //input - 18.07.2024 16:08:11
+        System.out.println(dateTime.length());
         if (dateTime.length() < 19) {
             for (int i = 0; i < dateTime.length(); i++) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy H:mm:ss");
@@ -113,4 +124,26 @@ public class TaskPlotterServiceParseFile {
         taskPlotterStorage.addTaskPlotter(taskPlotter);
     }
 
+
+
+    private void printFragments(String[] array) {
+        System.out.println("[0]=" + array[0]);
+        System.out.println("[1]=" + array[1]);
+        System.out.println("[2]=" + array[2]);
+        System.out.println("[3]=" + array[3]);
+        System.out.println("[4]=" + array[4]);
+        System.out.println("[5]=" + array[5]);
+        System.out.println("[6]=" + array[6]);
+        System.out.println("[7]=" + array[7]);
+        System.out.println("[8]=" + array[8]);
+        System.out.println("[9]=" + array[9]);
+        System.out.println("[10]=" + array[10]);
+        System.out.println("[11]=" + array[11]);
+        System.out.println("[12]=" + array[12]);
+        System.out.println("[13]=" + array[13]);
+        System.out.println("[14]=" + array[14]);
+        System.out.println("[15]=" + array[15]);
+        System.out.println("[16]=" + array[16]);
+        System.out.println("[17]=" + array[17]);
+    }
 }
