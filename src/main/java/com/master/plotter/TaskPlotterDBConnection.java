@@ -1,9 +1,9 @@
 package com.master.plotter;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TaskPlotterDBConnection {
@@ -63,8 +63,16 @@ public class TaskPlotterDBConnection {
 
     public void addAllTaskPlotter(List<TaskPlotter> tasksPlotter) {
         StringBuilder sqlStringBuilder = new StringBuilder();
+        List<TaskPlotter> onlyNewTask = new ArrayList<>();
 
         for (TaskPlotter taskPlotter : tasksPlotter) {
+            if (!containsDateTime(taskPlotter.getDateTime())) {
+                onlyNewTask.add(taskPlotter);
+            }
+        }
+
+
+        for (TaskPlotter taskPlotter : onlyNewTask) {
             sqlStringBuilder.append("('" +
                     taskPlotter.getTaskName() + "', '" +
                     taskPlotter.getTaskType() + "', '" +
@@ -117,6 +125,44 @@ public class TaskPlotterDBConnection {
 
     public List<TaskPlotter> getAllTaskPlotter() {
         return null;
+    }
+
+
+    //проверка на уникальность заявки
+    public boolean containsDateTime(LocalDateTime dateTime) {
+
+        String sql = "SELECT dateTime FROM plotter_stat " +
+                "WHERE dateTime = " + "'" + dateTime + "'";
+
+        connection = getConnection();
+
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            while(resultSet.next()) {
+
+                String dateTimeString = resultSet.getString(1);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime localDateTime = LocalDateTime.parse(dateTimeString, formatter);
+
+                if (localDateTime.equals(dateTime)) {
+                    resultSet.close();
+                    statement.close();
+                    connection.close();
+                    return true;
+                }
+            }
+
+            resultSet.close();
+            statement.close();
+            connection.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
     }
 
 

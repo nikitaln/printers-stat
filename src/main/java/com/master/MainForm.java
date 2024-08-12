@@ -1,6 +1,7 @@
 package com.master;
 
 import com.master.gui.MainFormService;
+import com.master.plotter.TaskPlotterDBConnection;
 import com.master.plotter.TaskPlotterService;
 import com.master.plotter.TaskPlotterStorage;
 
@@ -32,13 +33,15 @@ public class MainForm {
 
     private TaskPlotterService plotterService;
     private MainFormService mainFormService;
-
+    private TaskPlotterDBConnection dbConnection;
 
 
     public MainForm() {
 
         mainFormService = new MainFormService();
         plotterService = new TaskPlotterService();
+        dbConnection = new TaskPlotterDBConnection();
+
 
         rightButtonSearch.addActionListener(new ActionListener() {
 
@@ -61,6 +64,18 @@ public class MainForm {
                 rightTextArea.append("Отчет за период: " + date + "\n\n"
                         + "Плотная бумага=" + plotterService.getLengthHeavyPaper() + "м" + "\n"
                         + "Обычная бумага=" + plotterService.getLengthThinPaper() + "м");
+            }
+        });
+
+
+        rightSaveDbButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("НАЖАЛИ BUTTON");
+                plotterService.printAllTasks();
+                dbConnection.getConnection();
+                dbConnection.addAllTaskPlotter(plotterService.getAllTasks());
+
             }
         });
     }

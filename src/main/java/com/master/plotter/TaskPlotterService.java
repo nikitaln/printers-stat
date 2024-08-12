@@ -18,7 +18,6 @@ public class TaskPlotterService {
 
     private TaskPlotter taskPlotter;
     private TaskPlotterStorage taskPlotterStorage;
-    private TaskPlotterDBConnection taskPlotterDBConnection;
 
     private String path = "http://npic5e08b/hp/device/webAccess/index.htm;jsessionid=blir95p7c1?content=accounting";
 
@@ -240,11 +239,14 @@ public class TaskPlotterService {
 
 
 
-    private void parseTxtFileStatistics(String path) {
+    public void printAllTasks() {
+        taskPlotterStorage.printAllTaskPlotter();
+    }
 
 
 
-
+    public List<TaskPlotter> getAllTasks() {
+        return taskPlotterStorage.getAllPlotterTasks();
     }
 }
 
