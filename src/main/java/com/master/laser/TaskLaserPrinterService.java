@@ -4,58 +4,66 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class TaskLaserPrinterService {
 
+    String path = "C:\\Users\\lukanin_ns\\Desktop\\Отчеты с лазерных принтеров\\CANON.txt";
 
 
-    private void parseTxtFileStatisticsLaserPrinter(String path) {
-        int id = 0;
+    public void parseTxtFileStatisticsLaserPrinter() {
         //парсинг файла-журнала статистики
         File file = new File(path);
+
         try {
             List<String> lines = Files.readAllLines(Paths.get(path));
 
-            for (String line : lines) {
+            for (int i = 2; i < lines.size(); i++) {
 
                 /**TODO
                  * delete first line for good parsing this file
                  */
 
-                String[] fragments = line.split("\t");
+                String[] fragments = lines.get(i).split("\t");
 
-                //[0] - дата и время
-                //[1] - имя файла
-                //[2] - статус
-                //[3] - пользователь
-                //[4] - кол-во страниц
-                //[5] - общее количество напечатанных черно-белых страниц
-                //[6] - общее количество напечатанных цветных страниц
-                //[7] - количество напечатанных копий задания
-                //[8] - страницы
-                //[9] - формат страницы (могут быть пустые строки)
-                //[10] - тип материала для печати (могут быть пустые строки)
+                if (fragments.length != 8) {
+                    System.out.println("Тут=" + fragments[2]);
+                    String[] arrayDataTask = new String[8];
+                    arrayDataTask[0] = fragments[0];
+                    arrayDataTask[1] = fragments[1];
+                    arrayDataTask[2] = fragments[2];
+                    arrayDataTask[3] = fragments[3];
+                    arrayDataTask[4] = fragments[4];
+                    arrayDataTask[5] = fragments[5];
+                    arrayDataTask[6] = "Нет данных";
+                    arrayDataTask[7] = "Нет данных";
 
-                System.out.println("Дата: " + fragments[1] + " | " + "Кол-во стр: " + fragments[4] + " | " + "Пользователь: " + fragments[3]);
-                com.master.laser.TaskLaserPrinter taskLaserPrinter = new com.master.laser.TaskLaserPrinter();
+                    System.out.println("\tДата: " + arrayDataTask[0] + " | "
+                            + "Имя файла: " + arrayDataTask[1] + " | "
+                            + "Состояние печати: " + arrayDataTask[2] + " | "
+                            + "Пользователь: " + arrayDataTask[3] + " | "
+                            + "Кол-во страниц: " + arrayDataTask[4] + " | "
+                            + "Кол-во копий: " + arrayDataTask[5] + " | "
+                            + "Формат: " + arrayDataTask[6] + " | "
+                            + "Тип бумаги: " + arrayDataTask[7]);
 
-                id = id + 1;
-                taskLaserPrinter.setId(id);
-                taskLaserPrinter.setDateTime(fragments[0]);
-                taskLaserPrinter.setName(fragments[1]);
-                taskLaserPrinter.setStatus(true);
-                taskLaserPrinter.setFormat("A3");
-                taskLaserPrinter.setCountCopy(Integer.parseInt(fragments[7]));
-                taskLaserPrinter.setTypeOfPaper("обычная");
-                taskLaserPrinter.setStylePrint("фальц");
-                taskLaserPrinter.setCountPage(Long.parseLong(fragments[4]));
-                taskLaserPrinter.setUsername(fragments[3]);
+                    createTaskLaserPrinter(fragments, path);
+                    //передаем в метод по созданию задачи
+                } else {
+                    System.out.println("Дата: " + fragments[0] + " | "
+                            + "Имя файла: " + fragments[1] + " | "
+                            + "Состояние печати: " + fragments[2] + " | "
+                            + "Пользователь: " + fragments[3] + " | "
+                            + "Кол-во страниц: " + fragments[4] + " | "
+                            + "Кол-во копий: " + fragments[5] + " | "
+                            + "Формат: " + fragments[6] + " | "
+                            + "Тип бумаги: " + fragments[7]);
 
-                //sqlConnection.addTaskLaserPrinter(taskLaserPrinter);
-
-                System.out.println("success to add task");
-
+                    createTaskLaserPrinter(fragments, path);
+                    //передаем в метод по созданию задачи
+                }
 
 
                 /**TODO
@@ -64,11 +72,57 @@ public class TaskLaserPrinterService {
                  * create Database (print_center)
                  * create two tables (plotter_tasks, laser_tasks)
                  */
-
             }
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+
+    private TaskLaserPrinter createTaskLaserPrinter(String[] fragments, String path) {
+        TaskLaserPrinter taskLaserPrinter = new TaskLaserPrinter();
+
+        taskLaserPrinter.setDateTime(getLocalDateTime(fragments[0]));
+        taskLaserPrinter.setName(fragments[1]);
+        taskLaserPrinter.setStatus(fragments[2]);
+        taskLaserPrinter.setFormat(fragments[6]);
+        taskLaserPrinter.setCountPage(Long.parseLong(fragments[4]));
+        taskLaserPrinter.setCountCopy(Integer.parseInt(fragments[7]));
+        taskLaserPrinter.setTypeOfPaper(fragments[7]);
+        taskLaserPrinter.setUsername(fragments[3]);
+        taskLaserPrinter.setPrinter(getModelPrinter(path));
+        return taskLaserPrinter;
+    }
+
+
+
+    private String getModelPrinter(String path) {
+
+        if (path.contains("canon")) {
+            return "canon165";
+        } else if (path.contains("versat")) {
+            return "versant3100";
+        } else if (path.contains("c75")) {
+            return "c75";
+        }
+        return "нет принтера";
+    }
+
+
+
+    private LocalDateTime getLocalDateTime(String dateTime) {
+        if (dateTime.length() < 19) {
+
+            for (int i = 0; i < dateTime.length(); i++) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy H:mm:ss");
+                LocalDateTime localDateTime = LocalDateTime.parse(dateTime, formatter);
+                return localDateTime;
+            }
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
+        LocalDateTime localDateTime = LocalDateTime.parse(dateTime, formatter);
+        return localDateTime;
     }
 }

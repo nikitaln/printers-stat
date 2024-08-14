@@ -1,4 +1,5 @@
 import com.master.MainForm;
+import com.master.laser.TaskLaserPrinterService;
 
 import javax.swing.*;
 
@@ -9,16 +10,20 @@ public class App {
 
     public static void main(String[] args) {
 
-        JFrame frame = new JFrame();
-        frame.setSize(600, 400);
-        frame.setTitle("Printers-Stat");
+//        JFrame frame = new JFrame();
+//        frame.setSize(600, 400);
+//        frame.setTitle("Printers-Stat");
+//
+//        MainForm mf = new MainForm();
+//        frame.add(mf.getMainJPanel());
+//
+//        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//        frame.setLocationRelativeTo(null);
+//        frame.setVisible(true);
 
-        MainForm mf = new MainForm();
-        frame.add(mf.getMainJPanel());
 
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        TaskLaserPrinterService laserPrinterService = new TaskLaserPrinterService();
+        laserPrinterService.parseTxtFileStatisticsLaserPrinter();
 
     }
 }
