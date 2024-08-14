@@ -8,8 +8,15 @@ public class TaskLaserPrinterStorage {
     private List<TaskLaserPrinter> list = new ArrayList<>();
 
 
+
     public void addTaskLaserPrinter(TaskLaserPrinter taskLaserPrinter) {
         list.add(taskLaserPrinter);
+    }
+
+
+
+    public List<TaskLaserPrinter> getAllLaserTasks() {
+        return list;
     }
 
 

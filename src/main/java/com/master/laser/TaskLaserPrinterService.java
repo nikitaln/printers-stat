@@ -10,10 +10,14 @@ import java.util.List;
 
 public class TaskLaserPrinterService {
 
-    String path = "C:\\Users\\lukanin_ns\\Desktop\\Отчеты с лазерных принтеров\\CANON.txt";
+    TaskLaserPrinterStorage taskLaserPrinterStorage;
+    TaskLaserPrinterDBConnection taskLaserPrinterDBConnection;
+
+    String path = "C:\\Users\\lukanin_ns\\Desktop\\Отчеты с лазерных принтеров\\C75.txt";
 
 
     public void parseTxtFileStatisticsLaserPrinter() {
+        taskLaserPrinterStorage = new TaskLaserPrinterStorage();
         //парсинг файла-журнала статистики
         File file = new File(path);
 
@@ -22,13 +26,9 @@ public class TaskLaserPrinterService {
 
             for (int i = 2; i < lines.size(); i++) {
 
-                /**TODO
-                 * delete first line for good parsing this file
-                 */
-
                 String[] fragments = lines.get(i).split("\t");
 
-                if (fragments.length != 8) {
+                if (fragments.length < 8) {
                     System.out.println("Тут=" + fragments[2]);
                     String[] arrayDataTask = new String[8];
                     arrayDataTask[0] = fragments[0];
@@ -49,7 +49,9 @@ public class TaskLaserPrinterService {
                             + "Формат: " + arrayDataTask[6] + " | "
                             + "Тип бумаги: " + arrayDataTask[7]);
 
-                    createTaskLaserPrinter(fragments, path);
+
+                    TaskLaserPrinter taskLaserPrinter = createTaskLaserPrinter(arrayDataTask, path);
+                    taskLaserPrinterStorage.addTaskLaserPrinter(taskLaserPrinter);
                     //передаем в метод по созданию задачи
                 } else {
                     System.out.println("Дата: " + fragments[0] + " | "
@@ -61,10 +63,10 @@ public class TaskLaserPrinterService {
                             + "Формат: " + fragments[6] + " | "
                             + "Тип бумаги: " + fragments[7]);
 
-                    createTaskLaserPrinter(fragments, path);
+                    TaskLaserPrinter taskLaserPrinter = createTaskLaserPrinter(fragments, path);
+                    taskLaserPrinterStorage.addTaskLaserPrinter(taskLaserPrinter);
                     //передаем в метод по созданию задачи
                 }
-
 
                 /**TODO
                  * create com.master.laser.TaskLaserPrinter object and ADD to Storage Collection
@@ -73,6 +75,12 @@ public class TaskLaserPrinterService {
                  * create two tables (plotter_tasks, laser_tasks)
                  */
             }
+            taskLaserPrinterDBConnection = new TaskLaserPrinterDBConnection();
+//            taskLaserPrinterDBConnection.createTableForLaserPrinter();
+            taskLaserPrinterDBConnection.addAllTaskLaserPrinterToDataBse(
+                    taskLaserPrinterStorage.getAllLaserTasks());
+
+            System.out.println("Успешное Добавление");
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -89,7 +97,7 @@ public class TaskLaserPrinterService {
         taskLaserPrinter.setStatus(fragments[2]);
         taskLaserPrinter.setFormat(fragments[6]);
         taskLaserPrinter.setCountPage(Long.parseLong(fragments[4]));
-        taskLaserPrinter.setCountCopy(Integer.parseInt(fragments[7]));
+        taskLaserPrinter.setCountCopy(Integer.parseInt(fragments[5]));
         taskLaserPrinter.setTypeOfPaper(fragments[7]);
         taskLaserPrinter.setUsername(fragments[3]);
         taskLaserPrinter.setPrinter(getModelPrinter(path));
@@ -100,11 +108,11 @@ public class TaskLaserPrinterService {
 
     private String getModelPrinter(String path) {
 
-        if (path.contains("canon")) {
+        if (path.contains("CANON")) {
             return "canon165";
-        } else if (path.contains("versat")) {
+        } else if (path.contains("VERSANT")) {
             return "versant3100";
-        } else if (path.contains("c75")) {
+        } else if (path.contains("C75")) {
             return "c75";
         }
         return "нет принтера";

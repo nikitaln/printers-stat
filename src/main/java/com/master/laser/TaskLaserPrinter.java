@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class TaskLaserPrinter {
 
-    private long id;
+    private int id;
     private String name;                //СВАО_А4_Обычная.pdf
     private String  status;             //true - OK
     private String format;              //A4, А3
@@ -16,11 +16,11 @@ public class TaskLaserPrinter {
     private String printer;
 
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
