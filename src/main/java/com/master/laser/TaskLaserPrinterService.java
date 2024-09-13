@@ -13,7 +13,7 @@ public class TaskLaserPrinterService {
     TaskLaserPrinterStorage taskLaserPrinterStorage;
     TaskLaserPrinterDBConnection taskLaserPrinterDBConnection;
 
-    String path = "C:\\Users\\lukanin_ns\\Desktop\\Отчеты с лазерных принтеров\\C75.txt";
+    String path = "C:\\Users\\lukanin_ns\\Desktop\\Отчеты с лазерных принтеров\\CANON.txt";
 
 
     public void parseTxtFileStatisticsLaserPrinter() {
@@ -132,5 +132,13 @@ public class TaskLaserPrinterService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
         LocalDateTime localDateTime = LocalDateTime.parse(dateTime, formatter);
         return localDateTime;
+    }
+
+
+
+    private boolean isLatinStatusSymbols(String status) {
+        if (status.equals("OK")) {
+            return true;
+        } else return false;
     }
 }
