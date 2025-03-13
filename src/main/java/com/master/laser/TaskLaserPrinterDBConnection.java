@@ -75,9 +75,7 @@ public class TaskLaserPrinterDBConnection {
                     "'" + task.getName() + "', " +
                     "'" + task.getStatus() + ", " +
                     "'" + task.getFormat() + "', " +
-                    task.getCountCopy() + ", " +
-                    "'" + task.getTypeOfPaper() + "', " +
-                    task.getCountPage() + "', " +
+                    "'" + task.getCountPage() + "', " +
                     "'" + task.getUsername() + "', " +
                     "'" + task.getPrinter() + "');"
             );
@@ -101,8 +99,6 @@ public class TaskLaserPrinterDBConnection {
                     taskLaserPrinter.getName() + "', '" +
                     taskLaserPrinter.getStatus() + "', '" +
                     taskLaserPrinter.getFormat() + "', '" +
-                    taskLaserPrinter.getCountCopy() + "', '" +
-                    taskLaserPrinter.getTypeOfPaper() + "', '" +
                     taskLaserPrinter.getCountPage() + "', '" +
                     taskLaserPrinter.getUsername() + "', '" +
                     taskLaserPrinter.getPrinter() +  "'), ");

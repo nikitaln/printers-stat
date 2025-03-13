@@ -22,8 +22,8 @@ public class App {
         frame.setVisible(true);
 
 
-//        TaskLaserPrinterService laserPrinterService = new TaskLaserPrinterService();
-//        laserPrinterService.parseTxtFileStatisticsLaserPrinter();
+        TaskLaserPrinterService laserPrinterService = new TaskLaserPrinterService();
+        laserPrinterService.parseTxtFileStatisticsLaserPrinter();
 
     }
 }

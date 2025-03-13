@@ -5,15 +5,13 @@ import java.time.LocalDateTime;
 public class TaskLaserPrinter {
 
     private int id;
+    private LocalDateTime dateTime;     //дата заявки
     private String name;                //СВАО_А4_Обычная.pdf
     private String  status;             //true - OK
-    private String format;              //A4, А3
-    private int countCopy;              //2
-    private String typeOfPaper;         //плотная, обычная
     private long countPage;             //55
+    private String format;              //A4, А3
     private String username;            //lukanin_ns
-    private LocalDateTime dateTime;     //дата заявки
-    private String printer;
+    private String printer;             //versant
 
 
     public int getId() {
@@ -22,6 +20,14 @@ public class TaskLaserPrinter {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     public String getName() {
@@ -40,30 +46,6 @@ public class TaskLaserPrinter {
         this.status = status;
     }
 
-    public String getFormat() {
-        return format;
-    }
-
-    public void setFormat(String format) {
-        this.format = format;
-    }
-
-    public int getCountCopy() {
-        return countCopy;
-    }
-
-    public void setCountCopy(int countCopy) {
-        this.countCopy = countCopy;
-    }
-
-    public String getTypeOfPaper() {
-        return typeOfPaper;
-    }
-
-    public void setTypeOfPaper(String typeOfPaper) {
-        this.typeOfPaper = typeOfPaper;
-    }
-
     public long getCountPage() {
         return countPage;
     }
@@ -72,20 +54,20 @@ public class TaskLaserPrinter {
         this.countPage = countPage;
     }
 
+    public String getFormat() {
+        return format;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
-
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
     }
 
     public String getPrinter() {
