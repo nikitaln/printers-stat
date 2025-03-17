@@ -44,13 +44,15 @@ public class TaskLaserPrinterService {
                     arrayDataTask[5] = fragments[5];
 
                     System.out.println("size - " + fragments.length);
+                    System.out.println("format = " + arrayDataTask[4]);
+                    System.out.println("format after = " + getCorrectA4Format(arrayDataTask[4]));
 
                     System.out.println(
-                            "\tДата: " + arrayDataTask[0] + " | "
-                            + "Имя файла: " + arrayDataTask[1] + " | "
-                            + "Состояние печати: " + arrayDataTask[2] + " | "
-                            + "Кол-во страниц: " + arrayDataTask[3] + " | "
-                            + "Формат: " + arrayDataTask[4] + " | "
+                            "Дата: " + arrayDataTask[0] + "\n"
+                            + "Имя файла: " + arrayDataTask[1] + "\n"
+                            + "Состояние печати: " + arrayDataTask[2] + "\n"
+                            + "Кол-во страниц: " + arrayDataTask[3] + "\n"
+                            + "Формат: " + arrayDataTask[4] + "\n"
                             + "Пользователь: " + arrayDataTask[5]);
 
 
@@ -59,14 +61,18 @@ public class TaskLaserPrinterService {
 
                     //передаем в метод по созданию задачи
                 } else {
-                    System.out.println("size - " + fragments.length);
 
-                    System.out.println("Дата: " + fragments[0] + " | "
-                            + "Имя файла: " + fragments[1] + " | "
-                            + "Состояние печати: " + fragments[2] + " | "
-                            + "Пользователь: " + fragments[5] + " | "
-                            + "Кол-во страниц: " + fragments[3] + " | "
-                            + "Формат: " + fragments[4]);
+                    System.out.println("size - " + fragments.length);
+                    System.out.println("format = " + fragments[4]);
+                    System.out.println("format after = " + getCorrectA4Format(fragments[4]));
+
+                    System.out.println(
+                            "Дата: " + fragments[0] + "\n"
+                            + "Имя файла: " + fragments[1] + "\n"
+                            + "Состояние печати: " + fragments[2] + "\n"
+                            + "Кол-во страниц: " + fragments[3] + "\n"
+                            + "Формат: " + fragments[4] + "\n"
+                            + "Пользователь: " + fragments[5]);
 
                     TaskLaserPrinter taskLaserPrinter = createTaskLaserPrinter(fragments, path);
                     taskLaserPrinterStorage.addTaskLaserPrinter(taskLaserPrinter);
@@ -80,12 +86,13 @@ public class TaskLaserPrinterService {
                  * create two tables (plotter_tasks, laser_tasks)
                  */
             }
-//            taskLaserPrinterDBConnection = new TaskLaserPrinterDBConnection();
-//            taskLaserPrinterDBConnection.createTableForLaserPrinter();
-//            taskLaserPrinterDBConnection.addAllTaskLaserPrinterToDataBse(
-//                    taskLaserPrinterStorage.getAllLaserTasks());
-//
-//            System.out.println("Успешное Добавление");
+
+            taskLaserPrinterDBConnection = new TaskLaserPrinterDBConnection();
+            taskLaserPrinterDBConnection.createTableForLaserPrinter();
+            taskLaserPrinterDBConnection.addAllTaskLaserPrinterToDataBse(
+                    taskLaserPrinterStorage.getAllLaserTasks());
+
+            System.out.println("Успешное Добавление");
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -101,9 +108,10 @@ public class TaskLaserPrinterService {
         taskLaserPrinter.setName(fragments[1]);
         taskLaserPrinter.setStatus(fragments[2]);
         taskLaserPrinter.setCountPage(Long.parseLong(fragments[3]));
-        taskLaserPrinter.setFormat(fragments[4]);
+        taskLaserPrinter.setFormat(getCorrectA4Format(fragments[4]));
         taskLaserPrinter.setPrinter(getModelPrinter(path));
-        System.out.println("printer = " + getModelPrinter(path));
+        taskLaserPrinter.setUsername(fragments[5]);
+        System.out.println("printer = " + getModelPrinter(path) + "\n");
         return taskLaserPrinter;
     }
 
@@ -143,5 +151,17 @@ public class TaskLaserPrinterService {
         if (status.equals("OK")) {
             return true;
         } else return false;
+    }
+
+
+    //fix A4 LEF to A4
+    private String getCorrectA4Format(String format) {
+        if (format.equals("ошибка")) {
+            return "ошибка";
+        } else if (format.length() > 2) {
+            return format.substring(0, 2);
+        } else {
+            return format;
+        }
     }
 }

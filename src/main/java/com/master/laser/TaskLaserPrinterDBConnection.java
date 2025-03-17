@@ -1,6 +1,5 @@
 package com.master.laser;
 
-import com.master.plotter.TaskPlotter;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -34,14 +33,12 @@ public class TaskLaserPrinterDBConnection {
         String SQL = "CREATE TABLE laser_stat( " +
                 " id INT not NULL AUTO_INCREMENT, " +
                 " dateTime DATETIME, " +
-                " name VARCHAR (250), " +
-                " status VARCHAR (250), " +
+                " fileName VARCHAR (250), " +
+                " printStatus VARCHAR (250), " +
+                " countPages LONG, " +
                 " format VARCHAR (250), " +
-                " countCopy INTEGER, " +
-                " typeOfPaper VARCHAR (250), " +
-                " countPage LONG, " +
                 " username VARCHAR (250), " +
-                " printer VARCHAR (250), " +
+                " printerName VARCHAR (250), " +
                 " PRIMARY KEY(id));";
 
 
@@ -57,7 +54,6 @@ public class TaskLaserPrinterDBConnection {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 
 
@@ -69,7 +65,7 @@ public class TaskLaserPrinterDBConnection {
             Statement statement = connection.createStatement();
 
             statement.executeUpdate("INSERT INTO laserPrinterStat(" +
-                    " dateTime, name, status, format, countCopy, typeOfPaper, countPage, username, printer) " +
+                    " dateTime, fileName, printStatus, format, countPages, username, printerName) " +
                     "VALUES (" +
                     "'" + task.getDateTime() + "', " +
                     "'" + task.getName() + "', " +
@@ -115,15 +111,14 @@ public class TaskLaserPrinterDBConnection {
             Statement statement = connection.createStatement();
             statement.executeUpdate("INSERT INTO laser_stat(" +
                     " dateTime,"  +
-                    " name," +
-                    " status," +
+                    " fileName," +
+                    " printStatus," +
                     " format," +
-                    " countCopy," +
-                    " typeOfPaper," +
-                    " countPage," +
+                    " countPages," +
                     " username," +
-                    " printer) VALUES" + sqlFinal);
-            System.out.println("таблица plotter_stat заполнена");
+                    " printerName) VALUES" + sqlFinal);
+
+            System.out.println("таблица laser_stat заполнена");
             statement.close();
             connection.close();
         } catch (SQLException e) {
