@@ -13,10 +13,10 @@ public class TaskLaserPrinterService {
     TaskLaserPrinterStorage taskLaserPrinterStorage;
     TaskLaserPrinterDBConnection taskLaserPrinterDBConnection;
 
-    String path = "C:\\Users\\lukanin_ns\\Desktop\\PrintStatService\\VersantNewStat.txt";
+    //String path = "C:\\Users\\lukanin_ns\\Desktop\\PrintStatService\\VersantNewStat.txt";
 
 
-    public void parseTxtFileStatisticsLaserPrinter() {
+    public void parseTxtFileStatisticsLaserPrinter(String path) {
 
         System.out.println("ВХОД в метод => parseTxtFileStatisticsLaserPrinter");
 
@@ -28,7 +28,7 @@ public class TaskLaserPrinterService {
             List<String> lines = Files.readAllLines(Paths.get(path));
 
             //начало построчного парсинга файл со 3ьей строки
-            for (int i = 2; i < lines.size() - 1; i++) {
+            for (int i = 2; i < lines.size(); i++) {
 
                 String[] fragments = lines.get(i).split("\t");
 
@@ -87,10 +87,10 @@ public class TaskLaserPrinterService {
                  */
             }
 
-            taskLaserPrinterDBConnection = new TaskLaserPrinterDBConnection();
-            taskLaserPrinterDBConnection.createTableForLaserPrinter();
-            taskLaserPrinterDBConnection.addAllTaskLaserPrinterToDataBse(
-                    taskLaserPrinterStorage.getAllLaserTasks());
+//            taskLaserPrinterDBConnection = new TaskLaserPrinterDBConnection();
+//            taskLaserPrinterDBConnection.createTableForLaserPrinter();
+//            taskLaserPrinterDBConnection.addAllTaskLaserPrinterToDataBse(
+//                    taskLaserPrinterStorage.getAllLaserTasks());
 
             System.out.println("Успешное Добавление");
 
@@ -163,5 +163,34 @@ public class TaskLaserPrinterService {
         } else {
             return format;
         }
+    }
+
+
+
+    public long getSumA3Format() {
+        List<TaskLaserPrinter> tasks = taskLaserPrinterStorage.getAllLaserTasks();
+        long sumA3Format = 0;
+
+        for (TaskLaserPrinter task : tasks) {
+            if (task.getFormat().equals("A3")) {
+                sumA3Format = sumA3Format + task.getCountPage();
+            }
+        }
+
+        return sumA3Format;
+    }
+
+
+    public long getSumA4Format() {
+        List<TaskLaserPrinter> tasks = taskLaserPrinterStorage.getAllLaserTasks();
+        long sumA4Format = 0;
+
+        for (TaskLaserPrinter task : tasks) {
+            if (task.getFormat().equals("A4")) {
+                sumA4Format = sumA4Format + task.getCountPage();
+            }
+        }
+
+        return sumA4Format;
     }
 }

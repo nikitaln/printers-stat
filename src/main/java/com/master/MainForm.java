@@ -1,6 +1,7 @@
 package com.master;
 
 import com.master.gui.MainFormService;
+import com.master.laser.TaskLaserPrinterService;
 import com.master.plotter.TaskPlotterDBConnection;
 import com.master.plotter.TaskPlotterService;
 
@@ -33,6 +34,8 @@ public class MainForm {
     private TaskPlotterService plotterService;
     private MainFormService mainFormService;
     private TaskPlotterDBConnection dbConnection;
+
+    private TaskLaserPrinterService laserPrinterService;
 
 
     public MainForm() {
@@ -75,6 +78,25 @@ public class MainForm {
                 dbConnection.getConnection();
                 dbConnection.addAllTaskPlotter(plotterService.getAllTasks());
 
+            }
+        });
+
+
+        // test this field
+        leftButtonSearch.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String textFromField = leftPathTextField.getText();
+                laserPrinterService = new TaskLaserPrinterService();
+                laserPrinterService.parseTxtFileStatisticsLaserPrinter(textFromField);
+
+                long sumA3 = laserPrinterService.getSumA3Format();
+                long sumA4 = laserPrinterService.getSumA4Format();
+
+                leftTextArea.setText("versant3100\n" +
+                        "A3 = " + sumA3 + "\n" +
+                        "A4 = " + sumA4
+                );
             }
         });
     }
