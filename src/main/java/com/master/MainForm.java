@@ -1,6 +1,7 @@
 package com.master;
 
 import com.master.gui.MainFormService;
+import com.master.laser.TaskLaserPrinterDBConnection;
 import com.master.laser.TaskLaserPrinterService;
 import com.master.plotter.TaskPlotterDBConnection;
 import com.master.plotter.TaskPlotterService;
@@ -18,7 +19,7 @@ public class MainForm {
     private JPanel rightJPanel;
     private JLabel leftMainLabel;
     private JLabel leftInputDateLabel;
-    private JTextField textField1;
+    private JTextField путьКПапкеСTextField;
     private JTextField rightDateTextField;
     private JLabel rightMainLabel;
     private JLabel rightInputDateLabel;
@@ -34,6 +35,7 @@ public class MainForm {
     private TaskPlotterService plotterService;
     private MainFormService mainFormService;
     private TaskPlotterDBConnection dbConnection;
+    private TaskLaserPrinterDBConnection laserPrinterDBConnection;
 
     private TaskLaserPrinterService laserPrinterService;
 
@@ -43,7 +45,11 @@ public class MainForm {
         mainFormService = new MainFormService();
         plotterService = new TaskPlotterService();
         dbConnection = new TaskPlotterDBConnection();
+        laserPrinterDBConnection = new TaskLaserPrinterDBConnection();
 
+        leftTextArea.setText("Последняя дата отчета = " + laserPrinterDBConnection.getLastDateTime() + "\n" +
+                "A3=1245\n" +
+                "A4=5740");
 
         rightButtonSearch.addActionListener(new ActionListener() {
 
@@ -68,7 +74,6 @@ public class MainForm {
                         + "Обычная бумага=" + plotterService.getLengthThinPaper() + "м");
             }
         });
-
 
         rightSaveDbButton.addActionListener(new ActionListener() {
             @Override
@@ -108,4 +113,7 @@ public class MainForm {
     }
 
 
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+    }
 }

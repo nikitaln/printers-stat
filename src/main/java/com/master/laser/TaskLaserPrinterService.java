@@ -87,10 +87,10 @@ public class TaskLaserPrinterService {
                  */
             }
 
-//            taskLaserPrinterDBConnection = new TaskLaserPrinterDBConnection();
+            taskLaserPrinterDBConnection = new TaskLaserPrinterDBConnection();
 //            taskLaserPrinterDBConnection.createTableForLaserPrinter();
-//            taskLaserPrinterDBConnection.addAllTaskLaserPrinterToDataBse(
-//                    taskLaserPrinterStorage.getAllLaserTasks());
+            taskLaserPrinterDBConnection.addAllTaskLaserPrinterToDataBse(
+                    taskLaserPrinterStorage.getAllLaserTasks());
 
             System.out.println("Успешное Добавление");
 
@@ -119,11 +119,11 @@ public class TaskLaserPrinterService {
 
     private String getModelPrinter(String path) {
 
-        if (path.contains("CANON")) {
+        if (path.contains("canon")) {
             return "canon165";
-        } else if (path.contains("Versant")) {
+        } else if (path.contains("versant")) {
             return "versant3100";
-        } else if (path.contains("C75")) {
+        } else if (path.contains("c75")) {
             return "c75";
         }
         return "нет принтера";
@@ -179,6 +179,7 @@ public class TaskLaserPrinterService {
 
         return sumA3Format;
     }
+
 
 
     public long getSumA4Format() {

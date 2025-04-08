@@ -1,10 +1,7 @@
 package com.master.laser;
 
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 
 public class TaskLaserPrinterDBConnection {
@@ -13,6 +10,7 @@ public class TaskLaserPrinterDBConnection {
     private String user = "root";
     private String pass = "1234";
     Connection connection;
+
 
 
     public Connection getConnection() {
@@ -126,4 +124,34 @@ public class TaskLaserPrinterDBConnection {
         }
     }
 
+
+
+    public String getLastDateTime() {
+        String sql = "SELECT `dateTime` " +
+                "FROM `laser_stat` " +
+                "ORDER BY `dateTime` DESC " +
+                "LIMIT 1;";
+
+
+
+        connection = getConnection();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            String lastDate = "";
+            while (resultSet.next()) {
+                lastDate = resultSet.getString("dateTime");
+                System.out.println("last date = " + lastDate);
+            }
+
+            preparedStatement.close();
+            resultSet.close();
+            connection.close();
+            return lastDate;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
