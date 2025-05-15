@@ -7,6 +7,7 @@ import com.master.plotter.TaskPlotterDBConnection;
 import com.master.plotter.TaskPlotterService;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
@@ -19,18 +20,29 @@ public class MainForm {
     private JPanel rightJPanel;
     private JLabel leftMainLabel;
     private JLabel leftInputDateLabel;
-    private JTextField путьКПапкеСTextField;
-    private JTextField rightDateTextField;
-    private JLabel rightMainLabel;
-    private JLabel rightInputDateLabel;
+    private JTextField leftDatePeriodTextField;
+    private JTextField plotterGetDatePeriodTextField;
+    private JLabel rightPanelMainLabel;
+    private JLabel plotterDateLabel;
     private JButton leftButtonSearch;
-    private JButton rightButtonSearch;
+    private JButton plotterGetAndSaveStatisticsButton;
     private JTextArea leftTextArea;
     private JTextArea rightTextArea;
-    private JButton rightSaveDbButton;
-    private JButton leftSaveDbButton;
+    private JButton plotterStatisticsGetButton;
+    private JButton leftGetStatistics;
     private JLabel leftPathWithTxtFileLabel;
     private JTextField leftPathTextField;
+    private JLabel leftTextLabelLastDate;
+    private JPanel parseTxtFilePanel;
+    private JPanel statisticsLaserPanel;
+    private JPanel parseWebPlotterPagePanel;
+    private JTextField plotterDatePeriodTextField;
+    private JPanel statisticsPlotterPanel;
+    private JTextArea plotterStatisticsTextArea;
+    private JLabel plotterStatisticsLabel;
+    private JLabel plotterDatePeriodLabel;
+    private JLabel resultLabel;
+    private JLabel nameResultLabel;
 
     private TaskPlotterService plotterService;
     private MainFormService mainFormService;
@@ -42,21 +54,23 @@ public class MainForm {
 
     public MainForm() {
 
+        resultLabel.setText("");
+
+
         mainFormService = new MainFormService();
         plotterService = new TaskPlotterService();
         dbConnection = new TaskPlotterDBConnection();
         laserPrinterDBConnection = new TaskLaserPrinterDBConnection();
 
-        leftTextArea.setText("Последняя дата отчета = " + laserPrinterDBConnection.getLastDateTime() + "\n" +
-                "A3=1245\n" +
-                "A4=5740");
 
-        rightButtonSearch.addActionListener(new ActionListener() {
+        leftTextLabelLastDate.setText("Дата: " + laserPrinterDBConnection.getLastDateTime());
+
+
+        plotterGetAndSaveStatisticsButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                rightTextArea.setText("");
-                String date = rightDateTextField.getText();
+                String date = plotterGetDatePeriodTextField.getText();
                 if (mainFormService.isCorrectDateFormat(date)) {
 
                     if (!mainFormService.isOneDay(date)) {
@@ -69,13 +83,15 @@ public class MainForm {
                     }
                 }
 
-                rightTextArea.append("Отчет за период: " + date + "\n\n"
+                plotterStatisticsTextArea.append("Отчет за период: " + date + "\n\n"
                         + "Плотная бумага=" + plotterService.getLengthHeavyPaper() + "м" + "\n"
                         + "Обычная бумага=" + plotterService.getLengthThinPaper() + "м");
+                resultLabel.setText("Выполнено");
             }
         });
 
-        rightSaveDbButton.addActionListener(new ActionListener() {
+
+        plotterStatisticsGetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("НАЖАЛИ BUTTON");
@@ -102,6 +118,15 @@ public class MainForm {
                         "A3 = " + sumA3 + "\n" +
                         "A4 = " + sumA4
                 );
+            }
+        });
+
+
+        leftGetStatistics.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                leftTextArea.setText("Формат A4 = " + laserPrinterDBConnection.getStatisticsByDateFormatA4(leftDatePeriodTextField.getText()) + "\n" +
+                        "Формат A3 = " + laserPrinterDBConnection.getStatisticsByDateFormatA3());
             }
         });
     }

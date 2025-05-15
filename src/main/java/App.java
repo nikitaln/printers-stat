@@ -11,14 +11,15 @@ public class App {
     public static void main(String[] args) {
 
         JFrame frame = new JFrame();
-        frame.setSize(600, 400);
-        frame.setTitle("Printers-Stat");
+        frame.setSize(900, 600);
+        frame.setTitle("Статистика печати на принтерах");
 
         MainForm mf = new MainForm();
         frame.add(mf.getMainJPanel());
 
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
+        frame.setLocationRelativeTo(null);    //окно появляется в центре монитора
+        //frame.pack();
         frame.setVisible(true);
 
 //        TaskLaserPrinterService laserPrinterService = new TaskLaserPrinterService();

@@ -154,4 +154,84 @@ public class TaskLaserPrinterDBConnection {
             throw new RuntimeException(e);
         }
     }
+
+
+
+    public String getStatisticsByDateFormatA4(String datePeriod) {
+        //31.03.2025-04.04.2025
+
+        String[] dates = datePeriod.split("=");
+
+        System.out.println("start=" + dates[0]);
+        System.out.println("end=" + dates[1]);
+
+
+        String A4result = "";
+        String startDate = dates[0];
+        String endDate = dates[1];
+
+        String sqlFormatA4 = "SELECT SUM(`countPages`) `sum` FROM `laser_stat` " +
+                "WHERE " +
+                "`dateTime` > '" + startDate + "' AND " +
+                "`dateTime` <= '" + endDate + "' AND " +
+                "`format` LIKE 'A4';";
+
+        connection = getConnection();
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlFormatA4);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+
+            while (resultSet.next()) {
+                A4result = resultSet.getString("sum");
+                System.out.println("last date = " + A4result);
+            }
+
+            preparedStatement.close();
+            resultSet.close();
+            connection.close();
+            return A4result;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+    public String getStatisticsByDateFormatA3() {
+        //31.03.2025-04.04.2025
+
+        String A3result = "";
+        String startDate = "2025-04-21";
+        String endDate = "2025-04-25";
+
+        String sqlFormatA3 = "SELECT SUM(`countPages`) `sum` FROM `laser_stat` " +
+                "WHERE " +
+                "`dateTime` > '" + startDate + "' AND " +
+                "`dateTime` <= '" + endDate + "' AND " +
+                "`format` LIKE 'A3';";
+
+        connection = getConnection();
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlFormatA3);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+
+            while (resultSet.next()) {
+                A3result = resultSet.getString("sum");
+                System.out.println("last date = " + A3result);
+            }
+
+            preparedStatement.close();
+            resultSet.close();
+            connection.close();
+            return A3result;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

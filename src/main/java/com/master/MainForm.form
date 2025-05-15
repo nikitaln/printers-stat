@@ -1,23 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.master.MainForm">
   <grid id="27dc6" binding="mainJPanel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-    <margin top="8" left="8" bottom="8" right="5"/>
+    <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="622" height="400"/>
+      <xy x="44" y="46" width="716" height="541"/>
     </constraints>
     <properties>
+      <doubleBuffered value="true"/>
+      <enabled value="false"/>
+      <focusCycleRoot value="false"/>
+      <opaque value="true"/>
+      <requestFocusEnabled value="true"/>
       <toolTipText value=""/>
+      <verifyInputWhenFocusTarget value="true"/>
+      <visible value="true"/>
     </properties>
-    <border type="none"/>
+    <border type="none">
+      <font/>
+    </border>
     <children>
-      <grid id="41041" binding="leftJPanel" layout-manager="GridLayoutManager" row-count="8" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="41041" binding="leftJPanel" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="355" height="269"/>
-          </grid>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <autoscrolls value="false"/>
+          <opaque value="true"/>
+          <preferredSize width="300" height="400"/>
+          <requestFocusEnabled value="false"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="b08fe" class="javax.swing.JLabel" binding="leftMainLabel">
@@ -25,125 +37,236 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <font size="14"/>
               <text value="Лазерные принтеры"/>
             </properties>
           </component>
-          <component id="2d731" class="javax.swing.JButton" binding="leftButtonSearch">
+          <grid id="8ce9d" binding="parseTxtFilePanel" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="40" right="0"/>
             <constraints>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Парсинг и сохр в БД"/>
-            </properties>
-          </component>
-          <component id="5a60c" class="javax.swing.JTextArea" binding="leftTextArea">
-            <constraints>
-              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="50"/>
-              </grid>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
-          </component>
-          <component id="fe3b5" class="javax.swing.JButton" binding="leftSaveDbButton">
+            <border type="line" title="Заполнение Базы Данных">
+              <title-color color="-16776961"/>
+            </border>
+            <children>
+              <component id="cd6ef" class="javax.swing.JLabel" binding="leftPathWithTxtFileLabel">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Путь к папке с файлу"/>
+                  <verticalAlignment value="0"/>
+                </properties>
+              </component>
+              <component id="567e1" class="javax.swing.JTextField" binding="leftPathTextField">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                </constraints>
+                <properties/>
+              </component>
+              <component id="2d731" class="javax.swing.JButton" binding="leftButtonSearch">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <borderPainted value="true"/>
+                  <horizontalAlignment value="0"/>
+                  <text value="Сохранение инф-ции в БД"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="bb2e3" binding="statisticsLaserPanel" layout-manager="GridLayoutManager" row-count="5" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="20" right="0"/>
             <constraints>
-              <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Запрос из БД"/>
-            </properties>
-          </component>
-          <component id="cd6ef" class="javax.swing.JLabel" binding="leftPathWithTxtFileLabel">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Путь к папке с файлу (c75.txt, versant3100.txt, canon.txt)"/>
-              <verticalAlignment value="0"/>
-            </properties>
-          </component>
-          <component id="567e1" class="javax.swing.JTextField" binding="leftPathTextField">
-            <constraints>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="9ada4" class="javax.swing.JLabel" binding="leftInputDateLabel">
-            <constraints>
-              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <enabled value="true"/>
-              <text value="Введите дату отчета"/>
-            </properties>
-          </component>
-          <component id="5b73a" class="javax.swing.JTextField" binding="путьКПапкеСTextField" default-binding="true">
-            <constraints>
-              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
-          </component>
+            <border type="line" title="Запросы к Базе Данных">
+              <title-color color="-16776961"/>
+            </border>
+            <children>
+              <component id="9ada4" class="javax.swing.JLabel" binding="leftInputDateLabel">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <enabled value="true"/>
+                  <text value="Введите дату отчета"/>
+                </properties>
+              </component>
+              <component id="5b73a" class="javax.swing.JTextField" binding="leftDatePeriodTextField">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                </constraints>
+                <properties/>
+              </component>
+              <component id="5a60c" class="javax.swing.JTextArea" binding="leftTextArea">
+                <constraints>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="50"/>
+                  </grid>
+                </constraints>
+                <properties/>
+              </component>
+              <component id="188e5" class="javax.swing.JLabel" binding="leftTextLabelLastDate">
+                <constraints>
+                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Информация"/>
+                </properties>
+              </component>
+              <component id="fe3b5" class="javax.swing.JButton" binding="leftGetStatistics">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Запрос инф-ции из БД"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
         </children>
       </grid>
-      <grid id="d1f24" binding="rightJPanel" layout-manager="GridLayoutManager" row-count="6" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="d1f24" binding="rightJPanel" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <preferredSize width="300" height="400"/>
+          <visible value="true"/>
+        </properties>
         <border type="none"/>
         <children>
-          <component id="fc3ca" class="javax.swing.JLabel" binding="rightMainLabel">
+          <component id="fc3ca" class="javax.swing.JLabel" binding="rightPanelMainLabel">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <font size="14"/>
+              <opaque value="true"/>
               <text value="Плоттер"/>
             </properties>
           </component>
-          <component id="368a0" class="javax.swing.JLabel" binding="rightInputDateLabel">
+          <grid id="f158b" binding="parseWebPlotterPagePanel" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="20" right="0"/>
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Введите дату отчета"/>
-            </properties>
-          </component>
-          <component id="7484e" class="javax.swing.JTextField" binding="rightDateTextField">
-            <constraints>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
-          </component>
-          <component id="8dfdb" class="javax.swing.JButton" binding="rightButtonSearch">
+            <border type="line" title="Заполнение Базы Данных">
+              <title-color color="-16776961"/>
+            </border>
+            <children>
+              <component id="368a0" class="javax.swing.JLabel" binding="plotterDateLabel">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Введите дату отчета"/>
+                </properties>
+              </component>
+              <component id="7484e" class="javax.swing.JTextField" binding="plotterGetDatePeriodTextField">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <dragEnabled value="false"/>
+                  <inheritsPopupMenu value="false"/>
+                  <text value=""/>
+                  <visible value="true"/>
+                </properties>
+              </component>
+              <component id="8dfdb" class="javax.swing.JButton" binding="plotterGetAndSaveStatisticsButton">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Сохранение инф-ции в БД"/>
+                </properties>
+              </component>
+              <component id="857b3" class="javax.swing.JLabel" binding="nameResultLabel">
+                <constraints>
+                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Результат:"/>
+                </properties>
+              </component>
+              <component id="dfa37" class="javax.swing.JLabel" binding="resultLabel">
+                <constraints>
+                  <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <enabled value="true"/>
+                  <font style="1"/>
+                  <foreground color="-14435579"/>
+                  <text value="Выполнено"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="c9f93" binding="statisticsPlotterPanel" layout-manager="GridLayoutManager" row-count="5" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="20" right="0"/>
             <constraints>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Поиск"/>
-            </properties>
-          </component>
-          <component id="61fe0" class="javax.swing.JTextArea" binding="rightTextArea">
-            <constraints>
-              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="50"/>
-              </grid>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
-          </component>
-          <component id="5cf74" class="javax.swing.JButton" binding="rightSaveDbButton">
-            <constraints>
-              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Сохранить в БД"/>
-            </properties>
-          </component>
+            <border type="line" title="Запросы к Базе Данных">
+              <title-color color="-16776961"/>
+            </border>
+            <children>
+              <component id="30f" class="javax.swing.JLabel" binding="plotterDatePeriodLabel">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Введите дату отчета"/>
+                </properties>
+              </component>
+              <component id="f8691" class="javax.swing.JTextField" binding="plotterDatePeriodTextField">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                </constraints>
+                <properties/>
+              </component>
+              <component id="5cf74" class="javax.swing.JButton" binding="plotterStatisticsGetButton">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <label value="Запрос инф-ции из БД"/>
+                  <text value="Запрос инф-ции из БД"/>
+                </properties>
+              </component>
+              <component id="a9094" class="javax.swing.JLabel" binding="plotterStatisticsLabel">
+                <constraints>
+                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Информация"/>
+                </properties>
+              </component>
+              <component id="e670c" class="javax.swing.JTextArea" binding="plotterStatisticsTextArea">
+                <constraints>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="50"/>
+                  </grid>
+                </constraints>
+                <properties/>
+              </component>
+            </children>
+          </grid>
         </children>
       </grid>
     </children>
