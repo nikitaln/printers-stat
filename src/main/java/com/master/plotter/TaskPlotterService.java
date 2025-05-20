@@ -15,10 +15,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class TaskPlotterService {
 
-
     private TaskPlotter taskPlotter;
     private TaskPlotterStorage taskPlotterStorage;
-
     private String path = "http://npic5e08b/hp/device/webAccess/index.htm;jsessionid=blir95p7c1?content=accounting";
 
 
@@ -62,7 +60,6 @@ public class TaskPlotterService {
     }
 
 
-
     private TaskPlotter createTaskPlotterObject(Elements cols) {
 
         taskPlotter = new TaskPlotter();
@@ -91,7 +88,6 @@ public class TaskPlotterService {
     }
 
 
-
     private double getPaperConsumptionFromString(String paperSquare) {
         //input - 1,0710 м²
         //output - 1,0710
@@ -108,7 +104,6 @@ public class TaskPlotterService {
         squareDigitStr = squareDigitStr.replace(",", ".");
         return Double.valueOf(squareDigitStr);
     }
-
 
 
     private double getPaperLengthConsumptionFromString(String paperLength) {
@@ -129,7 +124,6 @@ public class TaskPlotterService {
     }
 
 
-
     private double getTonerConsumptionFromString(String toner) {
         String regex = "[0-9]";
         String tonerDigitStr = "";
@@ -143,7 +137,6 @@ public class TaskPlotterService {
         tonerDigitStr = tonerDigitStr.replace(",", ".");
         return Double.valueOf(tonerDigitStr);
     }
-
 
 
     private LocalDateTime getLocalDateTimeFromString(String dateTime) {
@@ -214,7 +207,6 @@ public class TaskPlotterService {
     }
 
 
-
     private boolean isEqualInputUserDate(LocalDateTime localDateTime, List<LocalDate> dates) {
 
         for (LocalDate date : dates) {
@@ -226,11 +218,9 @@ public class TaskPlotterService {
     }
 
 
-
     public double getLengthHeavyPaper() {
         return taskPlotterStorage.getLengthHeavyPaper();
     }
-
 
 
     public double getLengthThinPaper() {
@@ -238,11 +228,9 @@ public class TaskPlotterService {
     }
 
 
-
     public void printAllTasks() {
         taskPlotterStorage.printAllTaskPlotter();
     }
-
 
 
     public List<TaskPlotter> getAllTasks() {
