@@ -6,6 +6,7 @@
       <xy x="44" y="46" width="716" height="541"/>
     </constraints>
     <properties>
+      <background color="-7303024"/>
       <doubleBuffered value="true"/>
       <enabled value="false"/>
       <focusCycleRoot value="false"/>
@@ -171,8 +172,8 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <enabled value="true"/>
               <font size="14"/>
-              <opaque value="true"/>
               <text value="Плоттер"/>
             </properties>
           </component>

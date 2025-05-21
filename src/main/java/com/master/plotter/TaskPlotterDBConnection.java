@@ -184,7 +184,6 @@ public class TaskPlotterDBConnection {
         System.out.println("array1 = " + array[1]);
         String startDate = getLocalDateFromString(array[0]).toString();
         String endDate = getLocalDateFromString(array[1]).toString();
-
         System.out.println(startDate);
 
 
@@ -202,18 +201,14 @@ public class TaskPlotterDBConnection {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             Double heavyLength = 0.0;
-            String result = "";
             while (resultSet.next()) {
                 heavyLength = resultSet.getDouble("length");
-                DecimalFormat decimalFormat = new DecimalFormat("#.##");
-                result = decimalFormat.format(heavyLength);
-                System.out.println("thinLength = " + result);
             }
 
             preparedStatement.close();
             resultSet.close();
             connection.close();
-            return result;
+            return roundLength(heavyLength);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -233,8 +228,6 @@ public class TaskPlotterDBConnection {
 
         System.out.println(startDate);
 
-
-
         String sql = "SELECT SUM(`paperLengthConsumption`) `length`" +
                 "FROM `plotter_stat` " +
                 "WHERE " +
@@ -247,16 +240,16 @@ public class TaskPlotterDBConnection {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            String thinLength = "";
+            Double thinLength = 0.0;
             while (resultSet.next()) {
-                thinLength = resultSet.getString("length");
+                thinLength = resultSet.getDouble("length");
                 System.out.println("thinLength = " + thinLength);
             }
 
             preparedStatement.close();
             resultSet.close();
             connection.close();
-            return thinLength;
+            return roundLength(thinLength);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -293,4 +286,55 @@ public class TaskPlotterDBConnection {
         }
     }
 
+
+    //получение длинны потраченной самоклеящейся бумаги за период
+    public String getCountOfAdhesivePaperForPeriod(String period) {
+        //31.03.2025-04.04.2025
+        String regex = "[-]";
+        String[] array = period.split(regex);
+        System.out.println("array0 = " + array[0].toString());
+        System.out.println("array1 = " + array[1]);
+        String startDate = getLocalDateFromString(array[0]).toString();
+        String endDate = getLocalDateFromString(array[1]).toString();
+
+        System.out.println(startDate);
+
+
+
+        String sql = "SELECT SUM(`paperLengthConsumption`) `length`" +
+                "FROM `plotter_stat` " +
+                "WHERE " +
+                "`paperType` LIKE '%пленка%' AND " +
+                "`dateTime` >= '" + startDate + "' AND " +
+                "`dateTime` < '" + endDate + "';";
+
+        connection = getConnection();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            Double adhesiveLength = 0.0;
+            while (resultSet.next()) {
+                adhesiveLength = resultSet.getDouble("length");
+                System.out.println("thinLength = " + adhesiveLength);
+            }
+
+            preparedStatement.close();
+            resultSet.close();
+            connection.close();
+            return roundLength(adhesiveLength);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
+    //округление полученных результатов до 2-ух знаков после запятой
+    public String roundLength(Double lengthValue) {
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        String result = decimalFormat.format(lengthValue);
+        return result;
+    }
 }

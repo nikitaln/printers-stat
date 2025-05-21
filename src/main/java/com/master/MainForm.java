@@ -73,7 +73,10 @@ public class MainForm {
         plotterLastDateTextField.setText(taskPlotterDBConnection.getLastDateTime());
 
 
-        //button start parse web-page with plotter statistics
+        //кнопка парсинга web-страницы отчетом
+        /**
+         * TODO: по нажатию кнопки сканировать страницу и добавлять не достающие отчеты
+         */
         plotterGetAndSaveStatisticsButton.addActionListener(new ActionListener() {
 
             @Override
@@ -99,6 +102,10 @@ public class MainForm {
         });
 
 
+        //получение статистики по печати на плоттере за период
+        /**
+         * TODO: доделать возможность отчета за 1 день + тестирование
+         */
         plotterButtonGetInfoFromDB.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -110,7 +117,8 @@ public class MainForm {
                 plotterStatisticsTextArea.setText(
                         "отчет за период: " + datePeriod + "\n\n" +
                         "Обычная = " + taskPlotterDBConnection.getCountOfThinPaperForPeriod(datePeriod) + " м.\n" +
-                        "Плотная = " + taskPlotterDBConnection.getCountOfHeavyPaperForPeriod(datePeriod) + " м.");
+                        "Плотная = " + taskPlotterDBConnection.getCountOfHeavyPaperForPeriod(datePeriod) + " м.\n" +
+                        "Самоклейка = " + taskPlotterDBConnection.getCountOfAdhesivePaperForPeriod(datePeriod) + " м." );
 
             }
         });

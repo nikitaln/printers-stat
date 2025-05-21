@@ -11,7 +11,7 @@ public class App {
     public static void main(String[] args) {
 
         JFrame frame = new JFrame();
-        frame.setSize(900, 400);
+        frame.setSize(900, 600);
         frame.setTitle("Статистика печати на принтерах");
 
         MainForm mf = new MainForm();
