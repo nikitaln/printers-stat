@@ -229,8 +229,8 @@
                 <properties>
                   <enabled value="true"/>
                   <font style="1"/>
-                  <foreground color="-14435579"/>
-                  <text value="Выполнено"/>
+                  <foreground color="-7303024"/>
+                  <text value="Ожидание рез-та"/>
                 </properties>
               </component>
               <component id="f2f06" class="javax.swing.JLabel" binding="plotterLabelLastDate">

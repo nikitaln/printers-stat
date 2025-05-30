@@ -7,6 +7,7 @@ import com.master.plotter.TaskPlotterDBConnection;
 import com.master.plotter.TaskPlotterService;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
@@ -94,9 +95,10 @@ public class MainForm {
                     }
                 }
 
-                plotterStatisticsTextArea.append("Отчет за период: " + date + "\n\n"
-                        + "Плотная бумага=" + plotterService.getLengthHeavyPaper() + "м" + "\n"
-                        + "Обычная бумага=" + plotterService.getLengthThinPaper() + "м");
+                plotterService.printAllTasks();
+                dbConnection.getConnection();
+                dbConnection.addAllTaskPlotter(plotterService.getAllTasks());
+                resultLabel.setForeground(Color.GREEN);
                 resultLabel.setText("Выполнено");
             }
         });
@@ -110,9 +112,6 @@ public class MainForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("НАЖАЛИ BUTTON");
-//                plotterService.printAllTasks();
-//                dbConnection.getConnection();
-//                dbConnection.addAllTaskPlotter(plotterService.getAllTasks());
                 String datePeriod = plotterDatePeriodTextField.getText();
                 plotterStatisticsTextArea.setText(
                         "отчет за период: " + datePeriod + "\n\n" +
