@@ -27,7 +27,7 @@ public class MainForm {
     private JLabel plotterDateLabel;
     private JButton laserButtonSaveInfoToDB;
     private JButton plotterGetAndSaveStatisticsButton;
-    private JTextArea leftTextArea;
+    private JTextArea laserStatisticsTextArea;
     private JTextArea rightTextArea;
     private JButton plotterButtonGetInfoFromDB;
     private JButton laserGetStatisticsFromDB;
@@ -123,7 +123,7 @@ public class MainForm {
         });
 
 
-        // test this field
+        //test this field
         laserButtonSaveInfoToDB.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -134,7 +134,7 @@ public class MainForm {
                 long sumA3 = laserPrinterService.getSumA3Format();
                 long sumA4 = laserPrinterService.getSumA4Format();
 
-                leftTextArea.setText("versant3100\n" +
+                laserStatisticsTextArea.setText("versant3100\n" +
                         "A3 = " + sumA3 + "\n" +
                         "A4 = " + sumA4
                 );
@@ -142,11 +142,38 @@ public class MainForm {
         });
 
 
+        //получение статистики по печати на лазерных принтерах
+        /**
+         * Доделать кнопку
+         */
         laserGetStatisticsFromDB.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                leftTextArea.setText("Формат A4 = " + laserPrinterDBConnection.getStatisticsByDateFormatA4(leftDatePeriodTextField.getText()) + "\n" +
-                        "Формат A3 = " + laserPrinterDBConnection.getStatisticsByDateFormatA3());
+                String date = leftDatePeriodTextField.getText();
+                String A4_80gm = laserPrinterDBConnection.getStatisticsByDateFormat_A4(date);
+                String A3_80gm = laserPrinterDBConnection.getStatisticsByDateFormat_A3_80gm(date);
+                String A3_160gm = laserPrinterDBConnection.getStatisticsByDateFormat_A3_160gm(date);
+                String A3_sum = laserPrinterDBConnection.getStatisticsByDateFormat_A3_All(date);
+
+
+
+
+//                laserStatisticsTextArea.setText("Отчет за период: " + date + "\n\n" +
+//                        "Xerox Versant\n" +
+//                        "А4 (80гр) = " + "240 листов\n" +
+//                        "А3 (80гр / 160гр) = " + "1200 / 100 листов\n\n" +
+//                        "Xerox C75\n" +
+//                        "А4 (80гр) = " + "240 листов\n" +
+//                        "А3 (80гр / 160гр) = " + "1200 / 100 листов\n\n" +
+//                        "Итого:\n" +
+//                        "А4 (80гр) = " + "1000 листов\n" +
+//                        "А3 (80гр / 160гр) = " + "1200 / 100 листов\n");
+//
+                laserStatisticsTextArea.setText(
+                        "Результат за период: " + date + "\n\n" +
+                        "А4 = " + A4_80gm + " листов\n" +
+                        "А3 = " + A3_sum + " листов");
+
             }
         });
     }
