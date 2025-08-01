@@ -3,6 +3,7 @@ package com.master.laser;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -14,7 +15,6 @@ public class TaskLaserPrinterDBConnection {
     Connection connection;
 
 
-
     public Connection getConnection() {
         try {
             connection = DriverManager.getConnection(url, user, pass);
@@ -23,6 +23,51 @@ public class TaskLaserPrinterDBConnection {
             throw new RuntimeException(e);
         }
         return connection;
+    }
+
+
+    /**
+     *
+     * @param dateTime
+     * @return
+     *
+     * проверять поле DateTime и PrinterName
+     */
+    //проверка на уникальность записи в БД
+    public boolean containsDateTime(LocalDateTime dateTime, String printerName) {
+
+        String sql = "SELECT dateTime FROM plotter_stat " +
+                "WHERE dateTime = " + "'" + dateTime + "'";
+
+        connection = getConnection();
+
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            while(resultSet.next()) {
+
+                String dateTimeString = resultSet.getString(1);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime localDateTime = LocalDateTime.parse(dateTimeString, formatter);
+
+                if (localDateTime.equals(dateTime)) {
+                    resultSet.close();
+                    statement.close();
+                    connection.close();
+                    return true;
+                }
+            }
+
+            resultSet.close();
+            statement.close();
+            connection.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
     }
 
 
@@ -104,6 +149,8 @@ public class TaskLaserPrinterDBConnection {
         int lastIndex = sql.length();
         String sql2 = sql.substring(0, lastIndex - 2);
         String sqlFinal = sql2 + ";";
+
+        System.out.println(sql2);
 
 
         connection = getConnection();
@@ -244,6 +291,7 @@ public class TaskLaserPrinterDBConnection {
     }
 
 
+
     public String getStatisticsByDateFormat_A3_160gm(String datePeriod) {
         //31.03.2025-04.04.2025
 
@@ -284,6 +332,7 @@ public class TaskLaserPrinterDBConnection {
             throw new RuntimeException(e);
         }
     }
+
 
 
     public String getStatisticsByDateFormat_A3_All(String datePeriod) {

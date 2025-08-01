@@ -60,6 +60,7 @@ public class TaskPlotterService {
     }
 
 
+
     private TaskPlotter createTaskPlotterObject(Elements cols) {
 
         taskPlotter = new TaskPlotter();
@@ -88,6 +89,7 @@ public class TaskPlotterService {
     }
 
 
+
     private double getPaperConsumptionFromString(String paperSquare) {
         //input - 1,0710 м²
         //output - 1,0710
@@ -104,6 +106,7 @@ public class TaskPlotterService {
         squareDigitStr = squareDigitStr.replace(",", ".");
         return Double.valueOf(squareDigitStr);
     }
+
 
 
     private double getPaperLengthConsumptionFromString(String paperLength) {
@@ -124,6 +127,7 @@ public class TaskPlotterService {
     }
 
 
+
     private double getTonerConsumptionFromString(String toner) {
         String regex = "[0-9]";
         String tonerDigitStr = "";
@@ -139,6 +143,7 @@ public class TaskPlotterService {
     }
 
 
+
     private LocalDateTime getLocalDateTimeFromString(String dateTime) {
         //input - 18.07.2024 16:08:11
         if (dateTime.length() < 19) {
@@ -152,6 +157,7 @@ public class TaskPlotterService {
         LocalDateTime localDateTime = LocalDateTime.parse(dateTime, formatter);
         return localDateTime;
     }
+
 
 
     //Первый способ
@@ -207,6 +213,7 @@ public class TaskPlotterService {
     }
 
 
+
     private boolean isEqualInputUserDate(LocalDateTime localDateTime, List<LocalDate> dates) {
 
         for (LocalDate date : dates) {
@@ -218,9 +225,11 @@ public class TaskPlotterService {
     }
 
 
+
     public double getLengthHeavyPaper() {
         return taskPlotterStorage.getLengthHeavyPaper();
     }
+
 
 
     public double getLengthThinPaper() {
@@ -228,9 +237,11 @@ public class TaskPlotterService {
     }
 
 
+
     public void printAllTasks() {
         taskPlotterStorage.printAllTaskPlotter();
     }
+
 
 
     public List<TaskPlotter> getAllTasks() {

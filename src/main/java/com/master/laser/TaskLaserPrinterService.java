@@ -154,6 +154,7 @@ public class TaskLaserPrinterService {
     }
 
 
+
     //fix A4 LEF to A4
     private String getCorrectA4Format(String format) {
         if (format.equals("ошибка")) {

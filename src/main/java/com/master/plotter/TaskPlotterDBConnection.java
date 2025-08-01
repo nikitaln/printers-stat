@@ -30,6 +30,7 @@ public class TaskPlotterDBConnection {
     }
 
 
+
     //создание таблица plotter_stat
     public void createTable() {
         connection = getConnection();
@@ -62,6 +63,7 @@ public class TaskPlotterDBConnection {
 
 
     }
+
 
 
     //добавление списка задач в таблицу plotter_stat
@@ -126,15 +128,18 @@ public class TaskPlotterDBConnection {
     }
 
 
+
     public LocalDate getLocalDateFromString(String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         return LocalDate.parse(date, formatter);
     }
 
 
+
     public List<TaskPlotter> getAllTaskPlotter() {
         return null;
     }
+
 
 
     //проверка на уникальность заявки по дате
@@ -173,6 +178,7 @@ public class TaskPlotterDBConnection {
 
         return false;
     }
+
 
 
     //получение длинны потраченной Плотной бумаги за период
@@ -216,6 +222,7 @@ public class TaskPlotterDBConnection {
     }
 
 
+
     //получение длинны потраченной Обычной (Тонкой) бумаги за период
     public String getCountOfThinPaperForPeriod(String period) {
         //31.03.2025-04.04.2025
@@ -257,6 +264,7 @@ public class TaskPlotterDBConnection {
     }
 
 
+
     public String getLastDateTime() {
         String sql = "SELECT `dateTime` " +
                 "FROM `plotter_stat` " +
@@ -285,6 +293,7 @@ public class TaskPlotterDBConnection {
             throw new RuntimeException(e);
         }
     }
+
 
 
     //получение длинны потраченной самоклеящейся бумаги за период
@@ -329,6 +338,7 @@ public class TaskPlotterDBConnection {
         }
 
     }
+
 
 
     //округление полученных результатов до 2-ух знаков после запятой
