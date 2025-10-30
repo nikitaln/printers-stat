@@ -182,7 +182,6 @@ public class TaskLaserPrinterService {
     }
 
 
-
     public long getSumA4Format() {
         List<TaskLaserPrinter> tasks = taskLaserPrinterStorage.getAllLaserTasks();
         long sumA4Format = 0;
@@ -195,4 +194,5 @@ public class TaskLaserPrinterService {
 
         return sumA4Format;
     }
+
 }

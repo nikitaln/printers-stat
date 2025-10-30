@@ -17,8 +17,8 @@ public class TaskPlotterService {
 
     private TaskPlotter taskPlotter;
     private TaskPlotterStorage taskPlotterStorage;
-    private String path = "http://npic5e08b/hp/device/webAccess/index.htm;jsessionid=blir95p7c1?content=accounting";
-
+//    private String path = "http://npic5e08b/hp/device/webAccess/index.htm;jsessionid=blir95p7c1?content=accounting";    //старый PageWide
+    private String path = "http://172.20.53.15/hp/device/webAccess/index.htm;jsessionid=lmfwoyj8h1?content=accounting";    //новый PageWide
 
     //парсинг веб-страницы HP
     public void parseWebPrinterStatistics(List<LocalDate> dates) {

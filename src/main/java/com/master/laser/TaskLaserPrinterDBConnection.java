@@ -27,11 +27,8 @@ public class TaskLaserPrinterDBConnection {
 
 
     /**
-     *
      * @param dateTime
-     * @return
-     *
-     * проверять поле DateTime и PrinterName
+     * @return проверять поле DateTime и PrinterName
      */
     //проверка на уникальность записи в БД
     public boolean containsDateTime(LocalDateTime dateTime, String printerName) {
@@ -45,7 +42,7 @@ public class TaskLaserPrinterDBConnection {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
 
-            while(resultSet.next()) {
+            while (resultSet.next()) {
 
                 String dateTimeString = resultSet.getString(1);
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -69,7 +66,6 @@ public class TaskLaserPrinterDBConnection {
 
         return false;
     }
-
 
 
     public void createTableForLaserPrinter() {
@@ -102,7 +98,6 @@ public class TaskLaserPrinterDBConnection {
     }
 
 
-
     public void addTaskLaserPrinter(TaskLaserPrinter task) {
 
         try {
@@ -130,7 +125,6 @@ public class TaskLaserPrinterDBConnection {
     }
 
 
-
     public void addAllTaskLaserPrinterToDataBse(List<TaskLaserPrinter> taskLaserPrinterList) {
         StringBuilder sqlStringBuilder = new StringBuilder();
 
@@ -142,7 +136,7 @@ public class TaskLaserPrinterDBConnection {
                     taskLaserPrinter.getFormat() + "', '" +
                     taskLaserPrinter.getCountPage() + "', '" +
                     taskLaserPrinter.getUsername() + "', '" +
-                    taskLaserPrinter.getPrinter() +  "'), ");
+                    taskLaserPrinter.getPrinter() + "'), ");
         }
 
         String sql = sqlStringBuilder.toString();
@@ -157,7 +151,7 @@ public class TaskLaserPrinterDBConnection {
         try {
             Statement statement = connection.createStatement();
             statement.executeUpdate("INSERT INTO laser_stat(" +
-                    " dateTime,"  +
+                    " dateTime," +
                     " fileName," +
                     " printStatus," +
                     " format," +
@@ -174,13 +168,11 @@ public class TaskLaserPrinterDBConnection {
     }
 
 
-
     public String getLastDateTime() {
         String sql = "SELECT `dateTime` " +
                 "FROM `laser_stat` " +
                 "ORDER BY `dateTime` DESC " +
                 "LIMIT 1;";
-
 
 
         connection = getConnection();
@@ -203,7 +195,6 @@ public class TaskLaserPrinterDBConnection {
             throw new RuntimeException(e);
         }
     }
-
 
 
     public String getStatisticsByDateFormat_A4(String datePeriod) {
@@ -248,7 +239,6 @@ public class TaskLaserPrinterDBConnection {
     }
 
 
-
     public String getStatisticsByDateFormat_A3_80gm(String datePeriod) {
         //31.03.2025-04.04.2025
 
@@ -289,7 +279,6 @@ public class TaskLaserPrinterDBConnection {
             throw new RuntimeException(e);
         }
     }
-
 
 
     public String getStatisticsByDateFormat_A3_160gm(String datePeriod) {
@@ -334,7 +323,6 @@ public class TaskLaserPrinterDBConnection {
     }
 
 
-
     public String getStatisticsByDateFormat_A3_All(String datePeriod) {
         //31.03.2025-04.04.2025
 
@@ -376,9 +364,46 @@ public class TaskLaserPrinterDBConnection {
     }
 
 
-
     public LocalDate getLocalDateFromString(String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         return LocalDate.parse(date, formatter);
+    }
+
+
+    public String getCountFiles(String datePeriod) {
+        String[] dates = datePeriod.split("-");
+
+        System.out.println("start=" + dates[0]);
+        System.out.println("end=" + dates[1]);
+
+        String filesCount = "";
+        String startDate = getLocalDateFromString(dates[0]).toString();
+        String endDate = getLocalDateFromString(dates[1]).toString();
+
+        String sqlFormatA3 = "SELECT COUNT(*) `countFiles` FROM `laser_stat` " +
+                "WHERE " +
+                "`dateTime` >= '" + startDate + "' AND " +
+                "`dateTime` < '" + endDate + "';";
+
+        connection = getConnection();
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlFormatA3);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+
+            while (resultSet.next()) {
+                filesCount = resultSet.getString("countFiles");
+                System.out.println("Count Files = " + filesCount);
+            }
+
+            preparedStatement.close();
+            resultSet.close();
+            connection.close();
+            return filesCount;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

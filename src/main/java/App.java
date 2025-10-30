@@ -6,7 +6,7 @@ import javax.swing.*;
 
 public class App {
 
-    private static String hpPath = "http://npic5e08b/hp/device/webAccess/index.htm;jsessionid=blir95p7c1?content=accounting";
+    //private static String hpPath = "http://npic5e08b/hp/device/webAccess/index.htm;jsessionid=blir95p7c1?content=accounting";
 
     public static void main(String[] args) {
 

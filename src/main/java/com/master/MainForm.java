@@ -98,6 +98,9 @@ public class MainForm {
                 plotterService.printAllTasks();
                 dbConnection.getConnection();
                 dbConnection.addAllTaskPlotter(plotterService.getAllTasks());
+
+                plotterLastDateTextField.setText(taskPlotterDBConnection.getLastDateTime());
+
                 resultLabel.setForeground(Color.GREEN);
                 resultLabel.setText("Выполнено");
             }
@@ -130,15 +133,17 @@ public class MainForm {
                 String textFromField = leftPathTextField.getText();
                 laserPrinterService = new TaskLaserPrinterService();
                 laserPrinterService.parseTxtFileStatisticsLaserPrinter(textFromField);
+                laserTextFieldLastDate.setText(laserPrinterDBConnection.getLastDateTime());
 
                 long sumA3 = laserPrinterService.getSumA3Format();
                 long sumA4 = laserPrinterService.getSumA4Format();
 
-                laserStatisticsTextArea.setText("versant3100\n" +
+                laserStatisticsTextArea.setText("Результат\n" +
                         "A3 = " + sumA3 + "\n" +
                         "A4 = " + sumA4
                 );
             }
+
         });
 
 
@@ -154,6 +159,7 @@ public class MainForm {
                 String A3_80gm = laserPrinterDBConnection.getStatisticsByDateFormat_A3_80gm(date);
                 String A3_160gm = laserPrinterDBConnection.getStatisticsByDateFormat_A3_160gm(date);
                 String A3_sum = laserPrinterDBConnection.getStatisticsByDateFormat_A3_All(date);
+                String filesSum = laserPrinterDBConnection.getCountFiles(date);
 
 
 
@@ -172,7 +178,8 @@ public class MainForm {
                 laserStatisticsTextArea.setText(
                         "Результат за период: " + date + "\n\n" +
                         "А4 = " + A4_80gm + " листов\n" +
-                        "А3 = " + A3_sum + " листов");
+                        "А3 = " + A3_sum + " листов\n" +
+                        "Кол-во файлов = " + filesSum + " штук");
 
             }
         });
