@@ -347,4 +347,44 @@ public class TaskPlotterDBConnection {
         String result = decimalFormat.format(lengthValue);
         return result;
     }
+
+
+
+    public String getSumFiles(String datePeriod) {
+
+        String[] dates = datePeriod.split("-");
+
+        System.out.println("start=" + dates[0]);
+        System.out.println("end=" + dates[1]);
+
+        String filesCount = "";
+        String startDate = getLocalDateFromString(dates[0]).toString();
+        String endDate = getLocalDateFromString(dates[1]).toString();
+
+        String sqlFormatA3 = "SELECT COUNT(*) `countFiles` FROM `plotter_stat` " +
+                "WHERE " +
+                "`dateTime` >= '" + startDate + "' AND " +
+                "`dateTime` < '" + endDate + "';";
+
+        connection = getConnection();
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlFormatA3);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+
+            while (resultSet.next()) {
+                filesCount = resultSet.getString("countFiles");
+                System.out.println("Count Files = " + filesCount);
+            }
+
+            preparedStatement.close();
+            resultSet.close();
+            connection.close();
+            return filesCount;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

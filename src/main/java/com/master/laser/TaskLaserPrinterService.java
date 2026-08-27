@@ -32,8 +32,9 @@ public class TaskLaserPrinterService {
 
                 String[] fragments = lines.get(i).split("\t");
 
-                if (!fragments[2].contains("OK")) {
-                    System.out.println("Тут=" + fragments[2]);
+                //лат = OK и рус = ОК !!!
+                if (!fragments[2].contains("OK") && !fragments[2].contains("ОК")) {
+                    System.out.println("Условие не ОК -> Тут=" + fragments[2]);
 
                     String[] arrayDataTask = new String[6];
                     arrayDataTask[0] = fragments[0];
@@ -43,6 +44,14 @@ public class TaskLaserPrinterService {
                     arrayDataTask[4] = "ошибка";
                     arrayDataTask[5] = fragments[5];
 
+                    System.out.println("0 = " + fragments[0]);
+                    System.out.println("1 = " + fragments[1]);
+                    System.out.println("2 = " + fragments[2]);
+                    System.out.println("3 = " + fragments[3]);
+                    System.out.println("4 = " + fragments[4]);
+                    System.out.println("5 = " + fragments[5]);
+//                    System.out.println("6 = " + fragments[6]);
+//----------------------------------------------------------------------------------------------------------------------
                     System.out.println("size - " + fragments.length);
                     System.out.println("format = " + arrayDataTask[4]);
                     System.out.println("format after = " + getCorrectA4Format(arrayDataTask[4]));
@@ -62,6 +71,7 @@ public class TaskLaserPrinterService {
                     //передаем в метод по созданию задачи
                 } else {
 
+                    System.out.println("Условие ИНАЧЕ -> (2) = " + fragments[2]);
                     System.out.println("size - " + fragments.length);
                     System.out.println("format = " + fragments[4]);
                     System.out.println("format after = " + getCorrectA4Format(fragments[4]));
@@ -88,7 +98,7 @@ public class TaskLaserPrinterService {
             }
 
             taskLaserPrinterDBConnection = new TaskLaserPrinterDBConnection();
-//            taskLaserPrinterDBConnection.createTableForLaserPrinter();
+//оставить            taskLaserPrinterDBConnection.createTableForLaserPrinter();
             taskLaserPrinterDBConnection.addAllTaskLaserPrinterToDataBse(
                     taskLaserPrinterStorage.getAllLaserTasks());
 
@@ -119,12 +129,14 @@ public class TaskLaserPrinterService {
 
     private String getModelPrinter(String path) {
 
-        if (path.contains("canon")) {
+        if (path.contains("canon165")) {
             return "canon165";
         } else if (path.contains("versant")) {
             return "versant3100";
         } else if (path.contains("c75")) {
             return "c75";
+        } else if (path.contains("canon650")) {
+            return "canon650";
         }
         return "нет принтера";
     }

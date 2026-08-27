@@ -12,7 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainForm {
 
@@ -48,6 +50,7 @@ public class MainForm {
     private JLabel laserLabelLastDate;
     private JTextField plotterLastDateTextField;
     private JLabel plotterLabelLastDate;
+    private JComboBox comboBox1;
 
     private TaskPlotterService plotterService;
     private MainFormService mainFormService;
@@ -72,6 +75,8 @@ public class MainForm {
 
         //вывод последней даты отчета для Плоттера
         plotterLastDateTextField.setText(taskPlotterDBConnection.getLastDateTime());
+
+        initComboBox();
 
 
         //кнопка парсинга web-страницы отчетом
@@ -120,7 +125,8 @@ public class MainForm {
                         "отчет за период: " + datePeriod + "\n\n" +
                         "Обычная = " + taskPlotterDBConnection.getCountOfThinPaperForPeriod(datePeriod) + " м.\n" +
                         "Плотная = " + taskPlotterDBConnection.getCountOfHeavyPaperForPeriod(datePeriod) + " м.\n" +
-                        "Самоклейка = " + taskPlotterDBConnection.getCountOfAdhesivePaperForPeriod(datePeriod) + " м." );
+                        "Самоклейка = " + taskPlotterDBConnection.getCountOfAdhesivePaperForPeriod(datePeriod) + " м.\n" +
+                        "Кол-во файлов = " + taskPlotterDBConnection.getSumFiles(datePeriod) + " шт.");
 
             }
         });
@@ -154,32 +160,97 @@ public class MainForm {
         laserGetStatisticsFromDB.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //База сотрудников
+                Map<String, String> people = new HashMap<>();
+                people.put("Климов", "klimov_vu");
+                people.put("Биглер", "Biegler");
+                people.put("Есина", "esina_sv");
+                people.put("Гридасов", "ogridasov");
+                people.put("Луканин", "lukanin_ns");
+
+                //Берем дату отчета
                 String date = leftDatePeriodTextField.getText();
-                String A4_80gm = laserPrinterDBConnection.getStatisticsByDateFormat_A4(date);
-                String A3_80gm = laserPrinterDBConnection.getStatisticsByDateFormat_A3_80gm(date);
-                String A3_160gm = laserPrinterDBConnection.getStatisticsByDateFormat_A3_160gm(date);
-                String A3_sum = laserPrinterDBConnection.getStatisticsByDateFormat_A3_All(date);
-                String filesSum = laserPrinterDBConnection.getCountFiles(date);
 
+                //Проверка выпадающего списка: 1-все, 2-Климов, 3-Биглер
+                String resultItem = comboBox1.getSelectedItem().toString();
+                String domainName = people.get(resultItem);
 
+                String A4_80gm = "";
+                String A3_80gm = "";
+                String A3_160gm = "";
 
+                if (resultItem.equals("Все")) {
+                    A4_80gm = laserPrinterDBConnection.getFullStatisticsByDateFormat_A4_80gm(date);
+                    A3_80gm = laserPrinterDBConnection.getFullStatisticsByDateFormat_A3_80gm(date);
+                    A3_160gm = laserPrinterDBConnection.getFullStatisticsByDateFormat_A3_160gm(date);
+                } else {
+                    A4_80gm = laserPrinterDBConnection.getStatisticsByDateByNameFormat_A4_80gm(date, domainName);
+                    A3_80gm = laserPrinterDBConnection.getStatisticsByDateByNameFormat_A3_80gm(date, domainName);
+                    A3_160gm = laserPrinterDBConnection.getStatisticsByDateByNameFormat_A3_160gm(date, domainName);
+                }
 
-//                laserStatisticsTextArea.setText("Отчет за период: " + date + "\n\n" +
-//                        "Xerox Versant\n" +
-//                        "А4 (80гр) = " + "240 листов\n" +
-//                        "А3 (80гр / 160гр) = " + "1200 / 100 листов\n\n" +
-//                        "Xerox C75\n" +
-//                        "А4 (80гр) = " + "240 листов\n" +
-//                        "А3 (80гр / 160гр) = " + "1200 / 100 листов\n\n" +
-//                        "Итого:\n" +
-//                        "А4 (80гр) = " + "1000 листов\n" +
-//                        "А3 (80гр / 160гр) = " + "1200 / 100 листов\n");
-//
+                //Заполнение текстового поля
+                laserStatisticsTextArea.setText("Отчет за период = " + date);
+                laserStatisticsTextArea.setText("Сотрудник(и) = " + resultItem);
+                laserStatisticsTextArea.setText("А4 80гр = " + A4_80gm);
+                laserStatisticsTextArea.setText("А3 80гр = " + A3_80gm);
+                laserStatisticsTextArea.setText("А3 160гр = " + A3_160gm);
+
                 laserStatisticsTextArea.setText(
-                        "Результат за период: " + date + "\n\n" +
-                        "А4 = " + A4_80gm + " листов\n" +
-                        "А3 = " + A3_sum + " листов\n" +
-                        "Кол-во файлов = " + filesSum + " штук");
+                        "Отчет за период = " + date + "\n" +
+                        "Сотрудник(и) = " + resultItem + "\n" +
+                        "А4 80гр = " + A4_80gm + "\n" +
+                        "А3 80гр = " + A3_80gm + "\n" +
+                        "А3 160гр = " + A3_160gm
+                );
+
+                //10.08.2026-16.08.2026 - для проверки
+
+//                String A4_80gm = laserPrinterDBConnection.getStatisticsByDateFormat_A4(date);
+//                String A3_80gm = laserPrinterDBConnection.getStatisticsByDateFormat_A3_80gm(date);
+//                String A3_160gm = laserPrinterDBConnection.getStatisticsByDateFormat_A3_160gm(date);
+//                String A3_sum = laserPrinterDBConnection.getStatisticsByDateFormat_A3_All(date);
+//                String filesSum = laserPrinterDBConnection.getCountFiles(date);
+//
+//
+//
+//
+////                laserStatisticsTextArea.setText("Отчет за период: " + date + "\n\n" +
+////                        "Xerox Versant\n" +
+////                        "А4 (80гр) = " + "240 листов\n" +
+////                        "А3 (80гр / 160гр) = " + "1200 / 100 листов\n\n" +
+////                        "Xerox C75\n" +
+////                        "А4 (80гр) = " + "240 листов\n" +
+////                        "А3 (80гр / 160гр) = " + "1200 / 100 листов\n\n" +
+////                        "Итого:\n" +
+////                        "А4 (80гр) = " + "1000 листов\n" +
+////                        "А3 (80гр / 160гр) = " + "1200 / 100 листов\n");
+////
+//                laserStatisticsTextArea.setText(
+//                        "Результат за период: " + date + "\n\n" +
+//                        "А4 = " + A4_80gm + " листов\n" +
+//                        "А3 = " + A3_sum + " листов\n" +
+//                        "Кол-во файлов = " + filesSum + " штук");
+
+            }
+        });
+    }
+
+
+    public void initComboBox() {
+
+
+        System.out.println("initComboBox");
+        comboBox1.addItem("Все");
+        comboBox1.addItem("Климов");
+        comboBox1.addItem("Биглер");
+        comboBox1.addItem("Есина");
+        comboBox1.addItem("Гридасов");
+        comboBox1.addItem("Луканин");
+
+        comboBox1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
             }
         });

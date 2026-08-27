@@ -197,7 +197,7 @@ public class TaskLaserPrinterDBConnection {
     }
 
 
-    public String getStatisticsByDateFormat_A4(String datePeriod) {
+    public String getFullStatisticsByDateFormat_A4_80gm(String datePeriod) {
         //31.03.2025-04.04.2025
 
         String[] dates = datePeriod.split("-");
@@ -239,7 +239,7 @@ public class TaskLaserPrinterDBConnection {
     }
 
 
-    public String getStatisticsByDateFormat_A3_80gm(String datePeriod) {
+    public String getFullStatisticsByDateFormat_A3_80gm(String datePeriod) {
         //31.03.2025-04.04.2025
 
         String[] dates = datePeriod.split("-");
@@ -281,7 +281,7 @@ public class TaskLaserPrinterDBConnection {
     }
 
 
-    public String getStatisticsByDateFormat_A3_160gm(String datePeriod) {
+    public String getFullStatisticsByDateFormat_A3_160gm(String datePeriod) {
         //31.03.2025-04.04.2025
 
         String[] dates = datePeriod.split("-");
@@ -406,4 +406,134 @@ public class TaskLaserPrinterDBConnection {
             throw new RuntimeException(e);
         }
     }
+
+
+    public String getStatisticsByDateByNameFormat_A4_80gm(String datePeriod, String domainName) {
+        //31.03.2025-04.04.2025
+
+        String[] dates = datePeriod.split("-");
+
+        System.out.println("start=" + dates[0]);
+        System.out.println("end=" + dates[1]);
+
+
+        String A4result = "";
+        String startDate = getLocalDateFromString(dates[0]).toString();
+        String endDate = getLocalDateFromString(dates[1]).toString();
+
+        String sqlFormatA4 = "SELECT SUM(`countPages`) `sum` FROM `laser_stat` " +
+                "WHERE " +
+                "`dateTime` > '" + startDate + "' AND " +
+                "`dateTime` <= '" + endDate + "' AND " +
+                "`username` LIKE '" + domainName + "'" + " AND" +
+                "`format` LIKE 'A4';";
+
+        connection = getConnection();
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlFormatA4);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+
+            while (resultSet.next()) {
+                A4result = resultSet.getString("sum");
+                System.out.println("last date = " + A4result);
+            }
+
+            preparedStatement.close();
+            resultSet.close();
+            connection.close();
+            return A4result;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public String getStatisticsByDateByNameFormat_A3_80gm(String datePeriod, String domainName) {
+        //31.03.2025-04.04.2025
+
+        String[] dates = datePeriod.split("-");
+
+        System.out.println("start=" + dates[0]);
+        System.out.println("end=" + dates[1]);
+
+        String A3result = "";
+        String startDate = getLocalDateFromString(dates[0]).toString();
+        String endDate = getLocalDateFromString(dates[1]).toString();
+
+        String sqlFormatA3 = "SELECT SUM(`countPages`) `sum` FROM `laser_stat` " +
+                "WHERE " +
+                "`dateTime` > '" + startDate + "' AND " +
+                "`dateTime` <= '" + endDate + "' AND " +
+                "`username` LIKE '" + domainName + "'" + " AND" +
+                "`format` LIKE 'A3' AND " +
+                "`fileName` LIKE '%Обычная%';";
+
+        connection = getConnection();
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlFormatA3);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+
+            while (resultSet.next()) {
+                A3result = resultSet.getString("sum");
+                System.out.println("last date = " + A3result);
+            }
+
+            preparedStatement.close();
+            resultSet.close();
+            connection.close();
+            return A3result;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public String getStatisticsByDateByNameFormat_A3_160gm(String datePeriod, String domainName) {
+        //31.03.2025-04.04.2025
+
+        String[] dates = datePeriod.split("-");
+
+        System.out.println("start=" + dates[0]);
+        System.out.println("end=" + dates[1]);
+
+        String A3result = "";
+        String startDate = getLocalDateFromString(dates[0]).toString();
+        String endDate = getLocalDateFromString(dates[1]).toString();
+
+        String sqlFormatA3 = "SELECT SUM(`countPages`) `sum` FROM `laser_stat` " +
+                "WHERE " +
+                "`dateTime` > '" + startDate + "' AND " +
+                "`dateTime` <= '" + endDate + "' AND " +
+                "`username` LIKE '" + domainName + "'" + " AND" +
+                "`format` LIKE 'A3' AND " +
+                "`fileName` LIKE '%Плотная%';";
+
+        connection = getConnection();
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlFormatA3);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+
+            while (resultSet.next()) {
+                A3result = resultSet.getString("sum");
+                System.out.println("last date = " + A3result);
+            }
+
+            preparedStatement.close();
+            resultSet.close();
+            connection.close();
+            return A3result;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
