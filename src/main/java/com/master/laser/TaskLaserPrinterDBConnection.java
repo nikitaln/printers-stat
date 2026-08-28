@@ -408,6 +408,45 @@ public class TaskLaserPrinterDBConnection {
     }
 
 
+    public String getCountFilesByName(String datePeriod, String domainName) {
+        String[] dates = datePeriod.split("-");
+
+        System.out.println("start=" + dates[0]);
+        System.out.println("end=" + dates[1]);
+
+        String filesCount = "";
+        String startDate = getLocalDateFromString(dates[0]).toString();
+        String endDate = getLocalDateFromString(dates[1]).toString();
+
+        String sqlFormatA3 = "SELECT COUNT(*) `countFiles` FROM `laser_stat` " +
+                "WHERE " +
+                "`username` LIKE '" + domainName + "'" + " AND" +
+                "`dateTime` >= '" + startDate + "' AND " +
+                "`dateTime` < '" + endDate + "';";
+
+        connection = getConnection();
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlFormatA3);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+
+            while (resultSet.next()) {
+                filesCount = resultSet.getString("countFiles");
+                System.out.println("Count Files = " + filesCount);
+            }
+
+            preparedStatement.close();
+            resultSet.close();
+            connection.close();
+            return filesCount;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     public String getStatisticsByDateByNameFormat_A4_80gm(String datePeriod, String domainName) {
         //31.03.2025-04.04.2025
 

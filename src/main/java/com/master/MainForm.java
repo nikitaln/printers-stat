@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -123,10 +124,10 @@ public class MainForm {
                 String datePeriod = plotterDatePeriodTextField.getText();
                 plotterStatisticsTextArea.setText(
                         "отчет за период: " + datePeriod + "\n\n" +
-                        "Обычная = " + taskPlotterDBConnection.getCountOfThinPaperForPeriod(datePeriod) + " м.\n" +
-                        "Плотная = " + taskPlotterDBConnection.getCountOfHeavyPaperForPeriod(datePeriod) + " м.\n" +
-                        "Самоклейка = " + taskPlotterDBConnection.getCountOfAdhesivePaperForPeriod(datePeriod) + " м.\n" +
-                        "Кол-во файлов = " + taskPlotterDBConnection.getSumFiles(datePeriod) + " шт.");
+                                "Обычная = " + taskPlotterDBConnection.getCountOfThinPaperForPeriod(datePeriod) + " м.\n" +
+                                "Плотная = " + taskPlotterDBConnection.getCountOfHeavyPaperForPeriod(datePeriod) + " м.\n" +
+                                "Самоклейка = " + taskPlotterDBConnection.getCountOfAdhesivePaperForPeriod(datePeriod) + " м.\n" +
+                                "Кол-во файлов = " + taskPlotterDBConnection.getSumFiles(datePeriod) + " шт.");
 
             }
         });
@@ -178,6 +179,7 @@ public class MainForm {
                 String A4_80gm = "";
                 String A3_80gm = "";
                 String A3_160gm = "";
+                String Files_Sum = "";
 
                 if (resultItem.equals("Все")) {
                     A4_80gm = laserPrinterDBConnection.getFullStatisticsByDateFormat_A4_80gm(date);
@@ -187,51 +189,18 @@ public class MainForm {
                     A4_80gm = laserPrinterDBConnection.getStatisticsByDateByNameFormat_A4_80gm(date, domainName);
                     A3_80gm = laserPrinterDBConnection.getStatisticsByDateByNameFormat_A3_80gm(date, domainName);
                     A3_160gm = laserPrinterDBConnection.getStatisticsByDateByNameFormat_A3_160gm(date, domainName);
+                    Files_Sum = laserPrinterDBConnection.getCountFilesByName(date, domainName);
                 }
 
                 //Заполнение текстового поля
-                laserStatisticsTextArea.setText("Отчет за период = " + date);
-                laserStatisticsTextArea.setText("Сотрудник(и) = " + resultItem);
-                laserStatisticsTextArea.setText("А4 80гр = " + A4_80gm);
-                laserStatisticsTextArea.setText("А3 80гр = " + A3_80gm);
-                laserStatisticsTextArea.setText("А3 160гр = " + A3_160gm);
-
                 laserStatisticsTextArea.setText(
                         "Отчет за период = " + date + "\n" +
-                        "Сотрудник(и) = " + resultItem + "\n" +
-                        "А4 80гр = " + A4_80gm + "\n" +
-                        "А3 80гр = " + A3_80gm + "\n" +
-                        "А3 160гр = " + A3_160gm
+                                "Сотрудник(и) = " + resultItem + "\n" +
+                                "А4 80гр = " + A4_80gm + "\n" +
+                                "А3 80гр = " + A3_80gm + "\n" +
+                                "А3 160гр = " + A3_160gm + "\n" +
+                                "Кол-во файлов = " + Files_Sum + " шт."
                 );
-
-                //10.08.2026-16.08.2026 - для проверки
-
-//                String A4_80gm = laserPrinterDBConnection.getStatisticsByDateFormat_A4(date);
-//                String A3_80gm = laserPrinterDBConnection.getStatisticsByDateFormat_A3_80gm(date);
-//                String A3_160gm = laserPrinterDBConnection.getStatisticsByDateFormat_A3_160gm(date);
-//                String A3_sum = laserPrinterDBConnection.getStatisticsByDateFormat_A3_All(date);
-//                String filesSum = laserPrinterDBConnection.getCountFiles(date);
-//
-//
-//
-//
-////                laserStatisticsTextArea.setText("Отчет за период: " + date + "\n\n" +
-////                        "Xerox Versant\n" +
-////                        "А4 (80гр) = " + "240 листов\n" +
-////                        "А3 (80гр / 160гр) = " + "1200 / 100 листов\n\n" +
-////                        "Xerox C75\n" +
-////                        "А4 (80гр) = " + "240 листов\n" +
-////                        "А3 (80гр / 160гр) = " + "1200 / 100 листов\n\n" +
-////                        "Итого:\n" +
-////                        "А4 (80гр) = " + "1000 листов\n" +
-////                        "А3 (80гр / 160гр) = " + "1200 / 100 листов\n");
-////
-//                laserStatisticsTextArea.setText(
-//                        "Результат за период: " + date + "\n\n" +
-//                        "А4 = " + A4_80gm + " листов\n" +
-//                        "А3 = " + A3_sum + " листов\n" +
-//                        "Кол-во файлов = " + filesSum + " штук");
-
             }
         });
     }
