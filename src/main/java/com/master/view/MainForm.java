@@ -1,4 +1,4 @@
-package com.master;
+package com.master.view;
 
 import com.master.gui.MainFormService;
 import com.master.laser.TaskLaserPrinterDBConnection;
@@ -117,20 +117,20 @@ public class MainForm {
         /**
          * TODO: доделать возможность отчета за 1 день + тестирование
          */
-        plotterButtonGetInfoFromDB.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("НАЖАЛИ BUTTON");
-                String datePeriod = plotterDatePeriodTextField.getText();
-                plotterStatisticsTextArea.setText(
-                        "отчет за период: " + datePeriod + "\n\n" +
-                                "Обычная = " + taskPlotterDBConnection.getCountOfThinPaperForPeriod(datePeriod) + " м.\n" +
-                                "Плотная = " + taskPlotterDBConnection.getCountOfHeavyPaperForPeriod(datePeriod) + " м.\n" +
-                                "Самоклейка = " + taskPlotterDBConnection.getCountOfAdhesivePaperForPeriod(datePeriod) + " м.\n" +
-                                "Кол-во файлов = " + taskPlotterDBConnection.getSumFiles(datePeriod) + " шт.");
-
-            }
-        });
+//        plotterButtonGetInfoFromDB.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                System.out.println("НАЖАЛИ BUTTON");
+//                String datePeriod = plotterDatePeriodTextField.getText();
+//                plotterStatisticsTextArea.setText(
+//                        "отчет за период: " + datePeriod + "\n\n" +
+//                                "Обычная = " + taskPlotterDBConnection.getCountOfThinPaperForPeriod(datePeriod) + " м.\n" +
+//                                "Плотная = " + taskPlotterDBConnection.getCountOfHeavyPaperForPeriod(datePeriod) + " м.\n" +
+//                                "Самоклейка = " + taskPlotterDBConnection.getCountOfAdhesivePaperForPeriod(datePeriod) + " м.\n" +
+//                                "Кол-во файлов = " + taskPlotterDBConnection.getSumFiles(datePeriod) + " шт.");
+//
+//            }
+//        });
 
 
         //test this field
@@ -203,7 +203,17 @@ public class MainForm {
                 );
             }
         });
+
+
+        getStatFromPlotter();
     }
+
+
+    //рисуем главное окно с компонентами
+    public void initUI() {
+
+    }
+
 
 
     public void initComboBox() {
@@ -233,5 +243,15 @@ public class MainForm {
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
+    }
+
+
+    private void getStatFromPlotter() {
+        plotterButtonGetInfoFromDB.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("PRESS BUTTON GET STAT FROM PLOTTER");
+            }
+        });
     }
 }

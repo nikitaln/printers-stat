@@ -1,5 +1,6 @@
-import com.master.MainForm;
+import com.master.view.MainForm;
 import com.master.laser.TaskLaserPrinterService;
+import com.master.view.MainForm;
 
 import javax.swing.*;
 
