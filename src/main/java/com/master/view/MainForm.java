@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainForm {
+public class MainForm extends JFrame {
 
     private JPanel mainJPanel;
     private JPanel leftJPanel;
@@ -63,6 +63,19 @@ public class MainForm {
 
     public MainForm() {
 
+        //1. рисуем окно с пустыми/placeholder-значениями
+        initUI();
+
+        //2. выносим подписку на события выносят в отдельный метод initListeners(),
+        //  а сами обработчики — в ещё отдельные методы.
+        initListeners();
+
+        //3. грузим данные из БД асинхронно, ПОСЛЕ отрисовки
+        loadInitialData();
+
+
+
+
         mainFormService = new MainFormService();
         plotterService = new TaskPlotterService();
         dbConnection = new TaskPlotterDBConnection();
@@ -70,12 +83,12 @@ public class MainForm {
         laserPrinterDBConnection = new TaskLaserPrinterDBConnection();
 
 
-        //вывод последней даты отчета для Лазерного принтера
-        laserTextFieldLastDate.setText(laserPrinterDBConnection.getLastDateTime());
-
-
-        //вывод последней даты отчета для Плоттера
-        plotterLastDateTextField.setText(taskPlotterDBConnection.getLastDateTime());
+//        //вывод последней даты отчета для Лазерного принтера
+//        laserTextFieldLastDate.setText(laserPrinterDBConnection.getLastDateTime());
+//
+//
+//        //вывод последней даты отчета для Плоттера
+//        plotterLastDateTextField.setText(taskPlotterDBConnection.getLastDateTime());
 
         initComboBox();
 
@@ -209,10 +222,29 @@ public class MainForm {
     }
 
 
+
+
     //рисуем главное окно с компонентами
     public void initUI() {
+        setSize(900, 600);
+        setTitle("Статистика печати на принтерах");
+        add(getMainJPanel());
+
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);    //окно появляется в центре монитора
+        //frame.pack();
+
+        laserTextFieldLastDate.setText("идет загрузка...");
+        plotterLastDateTextField.setText("идет загрузка...");
 
     }
+
+    private void initListeners() {}
+
+    private void loadInitialData() {
+
+    }
+
 
 
 
