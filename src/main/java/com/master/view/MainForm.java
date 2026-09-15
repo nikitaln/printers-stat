@@ -147,24 +147,24 @@ public class MainForm extends JFrame {
 
 
         //test this field
-        laserButtonSaveInfoToDB.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String textFromField = leftPathTextField.getText();
-                laserPrinterService = new TaskLaserPrinterService();
-                laserPrinterService.parseTxtFileStatisticsLaserPrinter(textFromField);
-                laserTextFieldLastDate.setText(laserPrinterDBConnection.getLastDateTime());
-
-                long sumA3 = laserPrinterService.getSumA3Format();
-                long sumA4 = laserPrinterService.getSumA4Format();
-
-                laserStatisticsTextArea.setText("Результат\n" +
-                        "A3 = " + sumA3 + "\n" +
-                        "A4 = " + sumA4
-                );
-            }
-
-        });
+//        laserButtonSaveInfoToDB.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                String textFromField = leftPathTextField.getText();
+//                laserPrinterService = new TaskLaserPrinterService();
+//                laserPrinterService.parseTxtFileStatisticsLaserPrinter(textFromField);
+//                laserTextFieldLastDate.setText(laserPrinterDBConnection.getLastDateTime());
+//
+//                long sumA3 = laserPrinterService.getSumA3Format();
+//                long sumA4 = laserPrinterService.getSumA4Format();
+//
+//                laserStatisticsTextArea.setText("Результат\n" +
+//                        "A3 = " + sumA3 + "\n" +
+//                        "A4 = " + sumA4
+//                );
+//            }
+//
+//        });
 
 
         //получение статистики по печати на лазерных принтерах
@@ -222,10 +222,7 @@ public class MainForm extends JFrame {
     }
 
 
-
-
-    //рисуем главное окно с компонентами
-    public void initUI() {
+    private void initUI() {
         setSize(900, 600);
         setTitle("Статистика печати на принтерах");
         add(getMainJPanel());
@@ -239,14 +236,57 @@ public class MainForm extends JFrame {
 
     }
 
-    private void initListeners() {}
+    //обрабатываем события нажатий
+    private void initListeners() {
+        //1. сохранить данные в БД для лазера
+        laserButtonSaveInfoToDB.addActionListener(e -> onLaserSaveData());
+        //2. взять отчет из БД для лазера
+        //laserGetStatisticsFromDB.addActionListener();
+        //3. сохранить статистику плоттера
+        //plotterGetAndSaveStatisticsButton.addActionListener();
+        //4. взять отчет из БД для плоттера
+       //plotterButtonGetInfoFromDB.addActionListener();
+    }
+
+//_________________В РАЗРАБОТКЕ_________________________________________________________________________________________
+    /**
+     * В РАЗРАБОТКЕ
+     */
+    private void onLaserSaveData() {
+        //Заблокировали кнопку
+        setBusy(true);
+
+        new SwingWorker<String, Void>() {
+            @Override
+            protected String doInBackground() throws Exception {
+                //вызываем сервис -> затем DAO -> Возвращаем данные
+                System.out.println("PRESS BUTTON 1");
+                String textFromField = leftPathTextField.getText();
+                laserPrinterService.parseTxtFileStatisticsLaserPrinter(textFromField);
+                return "";  // фоновый поток
+            }
+            @Override
+            protected void done() {
+                setBusy(false);
+                try {
+                    System.out.println("PIZDOS");
+                }             // EDT
+                catch (Exception ex) { /* ... */ }
+            }
+        }.execute();
+    }
+
+
+    //Блокировка кнопки на время выполнения команды
+    private void setBusy(boolean busy) {
+        laserButtonSaveInfoToDB.setEnabled(!busy);
+    }
+
+//___________________НЕ ТРОГАТЬ_________________________________________________________________________________________
 
     private void loadInitialData() {
 
     }
-
-
-
 
     public void initComboBox() {
 
@@ -272,11 +312,9 @@ public class MainForm extends JFrame {
         return mainJPanel;
     }
 
-
     private void createUIComponents() {
         // TODO: place custom component creation code here
     }
-
 
     private void getStatFromPlotter() {
         plotterButtonGetInfoFromDB.addActionListener(new ActionListener() {
@@ -286,4 +324,10 @@ public class MainForm extends JFrame {
             }
         });
     }
+
+
+
+
+
+
 }

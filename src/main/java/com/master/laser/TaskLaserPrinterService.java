@@ -1,5 +1,7 @@
 package com.master.laser;
 
+import com.master.dao.TaskLaserPrinterDao;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,7 +13,13 @@ import java.util.List;
 public class TaskLaserPrinterService {
 
     TaskLaserPrinterStorage taskLaserPrinterStorage;
-    TaskLaserPrinterDBConnection taskLaserPrinterDBConnection;
+    TaskLaserPrinterDao taskLaserPrinterDao;
+
+    public TaskLaserPrinterService(TaskLaserPrinterStorage taskLaserPrinterStorage,
+                                   TaskLaserPrinterDao taskLaserPrinterDao) {
+        this.taskLaserPrinterStorage = taskLaserPrinterStorage;
+        this.taskLaserPrinterDao = taskLaserPrinterDao;
+    }
 
     //String path = "C:\\Users\\lukanin_ns\\Desktop\\PrintStatService\\VersantNewStat.txt";
 
@@ -19,8 +27,8 @@ public class TaskLaserPrinterService {
     public void parseTxtFileStatisticsLaserPrinter(String path) {
 
         System.out.println("ВХОД в метод => parseTxtFileStatisticsLaserPrinter");
+//        taskLaserPrinterStorage = new TaskLaserPrinterStorage(); = DELETE
 
-        taskLaserPrinterStorage = new TaskLaserPrinterStorage();
         //парсинг файла-журнала статистики
         File file = new File(path);
 
@@ -97,9 +105,9 @@ public class TaskLaserPrinterService {
                  */
             }
 
-            taskLaserPrinterDBConnection = new TaskLaserPrinterDBConnection();
+//            taskLaserPrinterDBConnection = new TaskLaserPrinterDBConnection(); = DELETE
 //оставить            taskLaserPrinterDBConnection.createTableForLaserPrinter();
-            taskLaserPrinterDBConnection.addAllTaskLaserPrinterToDataBse(
+            taskLaserPrinterDao.addAllTaskLaserPrinterToDataBse(
                     taskLaserPrinterStorage.getAllLaserTasks());
 
             System.out.println("Успешное Добавление");
@@ -108,7 +116,6 @@ public class TaskLaserPrinterService {
             throw new RuntimeException(e);
         }
     }
-
 
 
     private TaskLaserPrinter createTaskLaserPrinter(String[] fragments, String path) {
@@ -126,7 +133,6 @@ public class TaskLaserPrinterService {
     }
 
 
-
     private String getModelPrinter(String path) {
 
         if (path.contains("canon165")) {
@@ -140,7 +146,6 @@ public class TaskLaserPrinterService {
         }
         return "нет принтера";
     }
-
 
 
     private LocalDateTime getLocalDateTime(String dateTime) {
@@ -158,13 +163,11 @@ public class TaskLaserPrinterService {
     }
 
 
-
     private boolean isLatinStatusSymbols(String status) {
         if (status.equals("OK")) {
             return true;
         } else return false;
     }
-
 
 
     //fix A4 LEF to A4
@@ -177,7 +180,6 @@ public class TaskLaserPrinterService {
             return format;
         }
     }
-
 
 
     public long getSumA3Format() {

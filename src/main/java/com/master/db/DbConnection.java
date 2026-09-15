@@ -22,4 +22,13 @@ public class DbConnection {
         }
         return connection;
     }
+
+    //2. закрыть соединение с БД
+    public void closeConnection() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
