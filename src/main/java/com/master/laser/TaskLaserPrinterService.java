@@ -15,19 +15,15 @@ public class TaskLaserPrinterService {
     TaskLaserPrinterStorage taskLaserPrinterStorage;
     TaskLaserPrinterDao taskLaserPrinterDao;
 
-    public TaskLaserPrinterService(TaskLaserPrinterStorage taskLaserPrinterStorage,
-                                   TaskLaserPrinterDao taskLaserPrinterDao) {
-        this.taskLaserPrinterStorage = taskLaserPrinterStorage;
+    public TaskLaserPrinterService(TaskLaserPrinterDao taskLaserPrinterDao) {
         this.taskLaserPrinterDao = taskLaserPrinterDao;
     }
-
-    //String path = "C:\\Users\\lukanin_ns\\Desktop\\PrintStatService\\VersantNewStat.txt";
 
 
     public void parseTxtFileStatisticsLaserPrinter(String path) {
 
-        System.out.println("ВХОД в метод => parseTxtFileStatisticsLaserPrinter");
-//        taskLaserPrinterStorage = new TaskLaserPrinterStorage(); = DELETE
+        System.out.println("Вход в метод = parseTxtFileStatisticsLaserPrinter()");
+        taskLaserPrinterStorage = new TaskLaserPrinterStorage();
 
         //парсинг файла-журнала статистики
         File file = new File(path);
@@ -96,21 +92,13 @@ public class TaskLaserPrinterService {
                     taskLaserPrinterStorage.addTaskLaserPrinter(taskLaserPrinter);
                     //передаем в метод по созданию задачи
                 }
-
-                /**TODO
-                 * create com.master.laser.TaskLaserPrinter object and ADD to Storage Collection
-                 * create Database connection with JDBC-driver
-                 * create Database (print_center)
-                 * create two tables (plotter_tasks, laser_tasks)
-                 */
             }
 
-//            taskLaserPrinterDBConnection = new TaskLaserPrinterDBConnection(); = DELETE
 //оставить            taskLaserPrinterDBConnection.createTableForLaserPrinter();
+            System.out.println("Начало добавления данных в БД");
             taskLaserPrinterDao.addAllTaskLaserPrinterToDataBse(
                     taskLaserPrinterStorage.getAllLaserTasks());
-
-            System.out.println("Успешное Добавление");
+            System.out.println("Успешное добавление данных");
 
         } catch (IOException e) {
             throw new RuntimeException(e);

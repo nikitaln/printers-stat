@@ -1,35 +1,40 @@
+import com.master.dao.TaskLaserPrinterDao;
+import com.master.dao.TaskPlotterDao;
+import com.master.db.DbConnection;
+import com.master.plotter.TaskPlotterService;
 import com.master.view.MainForm;
 import com.master.laser.TaskLaserPrinterService;
-import com.master.view.MainForm;
 
 import javax.swing.*;
+import java.sql.Connection;
 
 
 public class App {
 
-    //private static String hpPath = "http://npic5e08b/hp/device/webAccess/index.htm;jsessionid=blir95p7c1?content=accounting";
-
-//    public static void main(String[] args) {
-//
-//        JFrame frame = new JFrame();
-//        frame.setSize(900, 600);
-//        frame.setTitle("Статистика печати на принтерах");
-//
-//        MainForm mf = new MainForm();
-//        frame.add(mf.getMainJPanel());
-//
-//        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//        frame.setLocationRelativeTo(null);    //окно появляется в центре монитора
-//        //frame.pack();
-//        frame.setVisible(true);
-//
-////        TaskLaserPrinterService laserPrinterService = new TaskLaserPrinterService();
-////        laserPrinterService.parseTxtFileStatisticsLaserPrinter();
-//
-//    }
-
-
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new MainForm().setVisible(true));
+
+        SwingUtilities.invokeLater(() -> {
+
+            try {
+                Connection conn = DbConnection.get();
+
+                TaskLaserPrinterDao laserPrinterDao = new TaskLaserPrinterDao(conn);
+                TaskPlotterDao plotterDao = new TaskPlotterDao(conn);
+
+                TaskLaserPrinterService laserPrinterService = new TaskLaserPrinterService(laserPrinterDao);
+                TaskPlotterService plotterService = new TaskPlotterService(plotterDao);
+
+                MainForm form = new MainForm(laserPrinterService, plotterService);
+                form.setVisible(true);
+
+                Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                    try { conn.close(); } catch (Exception ignored) {}
+                }));
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null,
+                        "Ошибка запуска: " + ex.getMessage(),
+                        "Ошибка", JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
 }

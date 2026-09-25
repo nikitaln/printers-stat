@@ -6,29 +6,35 @@ import java.sql.SQLException;
 
 public class DbConnection {
 
-    private String url = "jdbc:mysql://localhost:3306/printers_stat";
-    private String user = "root";
-    private String pass = "1234";
-    Connection connection;
+    private static String URL = "jdbc:mysql://localhost:3306/printers_stat";
+    private static String USER = "root";
+    private static String PASS = "1234";
 
+    private static Connection conn;
 
-    //1. установка соединения с БД
-    public Connection getConnection() {
+    private DbConnection() {}   // запрещаем создавать экземпляры
+
+    public static Connection get() {
         try {
-            connection = DriverManager.getConnection(url, user, pass);
-            System.out.println("соединение с БД установлено");
+            if (conn == null || conn.isClosed()) {
+                conn = DriverManager.getConnection(URL, USER, PASS);
+                System.out.println("Соединение с БД установлено");
+            }
+            return conn;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Не удалось подключиться к БД", e);
         }
-        return connection;
     }
 
-    //2. закрыть соединение с БД
-    public void closeConnection() {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+    public static void close() {
+        if (conn != null) {
+            try {
+                conn.close();
+                System.out.println("Соединение с БД закрыто");
+            } catch (SQLException ignored) {
+            } finally {
+                conn = null;
+            }
         }
     }
 }

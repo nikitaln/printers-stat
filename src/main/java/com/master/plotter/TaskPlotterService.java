@@ -1,5 +1,6 @@
 package com.master.plotter;
 
+import com.master.dao.TaskPlotterDao;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,8 +18,16 @@ public class TaskPlotterService {
 
     private TaskPlotter taskPlotter;
     private TaskPlotterStorage taskPlotterStorage;
-//    private String path = "http://npic5e08b/hp/device/webAccess/index.htm;jsessionid=blir95p7c1?content=accounting";    //старый PageWide
-    private String path = "http://npi477340/hp/device/webAccess/index.htm;jsessionid=dp01bpqil1?content=accounting";    //новый PageWide
+    private TaskPlotterDao plotterDao;
+
+    public TaskPlotterService(TaskPlotterDao plotterDao) {
+        this.plotterDao = plotterDao;
+    }
+
+    //    private String path = "http://npic5e08b/hp/device/webAccess/index.htm;jsessionid=blir95p7c1?content=accounting";    //старый PageWide
+    //    private String path = "http://npi477340/hp/device/webAccess/index.htm;jsessionid=dp01bpqil1?content=accounting";    //новый PageWide
+    private String path = "http://172.20.51.135/hp/device/webAccess/index.htm;jsessionid=t7e4p68mi1?content=accounting";    //PageWide5100
+
 
     //парсинг веб-страницы HP
     public void parseWebPrinterStatistics(List<LocalDate> dates) {
@@ -157,7 +166,6 @@ public class TaskPlotterService {
         LocalDateTime localDateTime = LocalDateTime.parse(dateTime, formatter);
         return localDateTime;
     }
-
 
 
     //Первый способ

@@ -1,7 +1,6 @@
 package com.master.view;
 
-import com.master.gui.MainFormService;
-import com.master.laser.TaskLaserPrinterDBConnection;
+import com.master.gui.DateService;
 import com.master.laser.TaskLaserPrinterService;
 import com.master.plotter.TaskPlotterDBConnection;
 import com.master.plotter.TaskPlotterService;
@@ -10,12 +9,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MainForm extends JFrame {
 
@@ -29,7 +25,7 @@ public class MainForm extends JFrame {
     private JLabel rightPanelMainLabel;
     private JLabel plotterDateLabel;
     private JButton laserButtonSaveInfoToDB;
-    private JButton plotterGetAndSaveStatisticsButton;
+    private JButton plotterSaveStatisticsButton;
     private JTextArea laserStatisticsTextArea;
     private JTextArea rightTextArea;
     private JButton plotterButtonGetInfoFromDB;
@@ -52,16 +48,22 @@ public class MainForm extends JFrame {
     private JTextField plotterLastDateTextField;
     private JLabel plotterLabelLastDate;
     private JComboBox comboBox1;
+    private JComboBox comboBoxSelectPlotter;
 
-    private TaskPlotterService plotterService;
-    private MainFormService mainFormService;
-    private TaskPlotterDBConnection dbConnection;
-    private TaskLaserPrinterDBConnection laserPrinterDBConnection;
+    private DateService mainFormService;
+
+    //--------------------------------------------------
     private TaskLaserPrinterService laserPrinterService;
-    private TaskPlotterDBConnection taskPlotterDBConnection;
+    private TaskPlotterService plotterService;
 
 
-    public MainForm() {
+
+    public MainForm(TaskLaserPrinterService laserPrinterService, TaskPlotterService plotterService) {
+        this.laserPrinterService = laserPrinterService;
+        this.plotterService = plotterService;
+
+        mainFormService = new DateService();
+
 
         //1. рисуем окно с пустыми/placeholder-значениями
         initUI();
@@ -72,15 +74,6 @@ public class MainForm extends JFrame {
 
         //3. грузим данные из БД асинхронно, ПОСЛЕ отрисовки
         loadInitialData();
-
-
-
-
-        mainFormService = new MainFormService();
-        plotterService = new TaskPlotterService();
-        dbConnection = new TaskPlotterDBConnection();
-        taskPlotterDBConnection = new TaskPlotterDBConnection();
-        laserPrinterDBConnection = new TaskLaserPrinterDBConnection();
 
 
 //        //вывод последней даты отчета для Лазерного принтера
@@ -97,7 +90,7 @@ public class MainForm extends JFrame {
         /**
          * TODO: по нажатию кнопки сканировать страницу и добавлять не достающие отчеты
          */
-        plotterGetAndSaveStatisticsButton.addActionListener(new ActionListener() {
+        plotterSaveStatisticsButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -146,76 +139,56 @@ public class MainForm extends JFrame {
 //        });
 
 
-        //test this field
-//        laserButtonSaveInfoToDB.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                String textFromField = leftPathTextField.getText();
-//                laserPrinterService = new TaskLaserPrinterService();
-//                laserPrinterService.parseTxtFileStatisticsLaserPrinter(textFromField);
-//                laserTextFieldLastDate.setText(laserPrinterDBConnection.getLastDateTime());
-//
-//                long sumA3 = laserPrinterService.getSumA3Format();
-//                long sumA4 = laserPrinterService.getSumA4Format();
-//
-//                laserStatisticsTextArea.setText("Результат\n" +
-//                        "A3 = " + sumA3 + "\n" +
-//                        "A4 = " + sumA4
-//                );
-//            }
-//
-//        });
-
 
         //получение статистики по печати на лазерных принтерах
         /**
          * Доделать кнопку
          */
-        laserGetStatisticsFromDB.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //База сотрудников
-                Map<String, String> people = new HashMap<>();
-                people.put("Климов", "klimov_vu");
-                people.put("Биглер", "Biegler");
-                people.put("Есина", "esina_sv");
-                people.put("Гридасов", "ogridasov");
-                people.put("Луканин", "lukanin_ns");
-
-                //Берем дату отчета
-                String date = leftDatePeriodTextField.getText();
-
-                //Проверка выпадающего списка: 1-все, 2-Климов, 3-Биглер
-                String resultItem = comboBox1.getSelectedItem().toString();
-                String domainName = people.get(resultItem);
-
-                String A4_80gm = "";
-                String A3_80gm = "";
-                String A3_160gm = "";
-                String Files_Sum = "";
-
-                if (resultItem.equals("Все")) {
-                    A4_80gm = laserPrinterDBConnection.getFullStatisticsByDateFormat_A4_80gm(date);
-                    A3_80gm = laserPrinterDBConnection.getFullStatisticsByDateFormat_A3_80gm(date);
-                    A3_160gm = laserPrinterDBConnection.getFullStatisticsByDateFormat_A3_160gm(date);
-                } else {
-                    A4_80gm = laserPrinterDBConnection.getStatisticsByDateByNameFormat_A4_80gm(date, domainName);
-                    A3_80gm = laserPrinterDBConnection.getStatisticsByDateByNameFormat_A3_80gm(date, domainName);
-                    A3_160gm = laserPrinterDBConnection.getStatisticsByDateByNameFormat_A3_160gm(date, domainName);
-                    Files_Sum = laserPrinterDBConnection.getCountFilesByName(date, domainName);
-                }
-
-                //Заполнение текстового поля
-                laserStatisticsTextArea.setText(
-                        "Отчет за период = " + date + "\n" +
-                                "Сотрудник(и) = " + resultItem + "\n" +
-                                "А4 80гр = " + A4_80gm + "\n" +
-                                "А3 80гр = " + A3_80gm + "\n" +
-                                "А3 160гр = " + A3_160gm + "\n" +
-                                "Кол-во файлов = " + Files_Sum + " шт."
-                );
-            }
-        });
+//        laserGetStatisticsFromDB.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                //База сотрудников
+//                Map<String, String> people = new HashMap<>();
+//                people.put("Климов", "klimov_vu");
+//                people.put("Биглер", "Biegler");
+//                people.put("Есина", "esina_sv");
+//                people.put("Гридасов", "ogridasov");
+//                people.put("Луканин", "lukanin_ns");
+//
+//                //Берем дату отчета
+//                String date = leftDatePeriodTextField.getText();
+//
+//                //Проверка выпадающего списка: 1-все, 2-Климов, 3-Биглер
+//                String resultItem = comboBox1.getSelectedItem().toString();
+//                String domainName = people.get(resultItem);
+//
+//                String A4_80gm = "";
+//                String A3_80gm = "";
+//                String A3_160gm = "";
+//                String Files_Sum = "";
+//
+//                if (resultItem.equals("Все")) {
+//                    A4_80gm = laserPrinterDBConnection.getFullStatisticsByDateFormat_A4_80gm(date);
+//                    A3_80gm = laserPrinterDBConnection.getFullStatisticsByDateFormat_A3_80gm(date);
+//                    A3_160gm = laserPrinterDBConnection.getFullStatisticsByDateFormat_A3_160gm(date);
+//                } else {
+//                    A4_80gm = laserPrinterDBConnection.getStatisticsByDateByNameFormat_A4_80gm(date, domainName);
+//                    A3_80gm = laserPrinterDBConnection.getStatisticsByDateByNameFormat_A3_80gm(date, domainName);
+//                    A3_160gm = laserPrinterDBConnection.getStatisticsByDateByNameFormat_A3_160gm(date, domainName);
+//                    Files_Sum = laserPrinterDBConnection.getCountFilesByName(date, domainName);
+//                }
+//
+//                //Заполнение текстового поля
+//                laserStatisticsTextArea.setText(
+//                        "Отчет за период = " + date + "\n" +
+//                                "Сотрудник(и) = " + resultItem + "\n" +
+//                                "А4 80гр = " + A4_80gm + "\n" +
+//                                "А3 80гр = " + A3_80gm + "\n" +
+//                                "А3 160гр = " + A3_160gm + "\n" +
+//                                "Кол-во файлов = " + Files_Sum + " шт."
+//                );
+//            }
+//        });
 
 
         getStatFromPlotter();
@@ -243,14 +216,14 @@ public class MainForm extends JFrame {
         //2. взять отчет из БД для лазера
         //laserGetStatisticsFromDB.addActionListener();
         //3. сохранить статистику плоттера
-        //plotterGetAndSaveStatisticsButton.addActionListener();
+        plotterSaveStatisticsButton.addActionListener(e -> onPlotterSaveData());
         //4. взять отчет из БД для плоттера
        //plotterButtonGetInfoFromDB.addActionListener();
     }
 
-//_________________В РАЗРАБОТКЕ_________________________________________________________________________________________
+//_________________В РАЗРАБОТКЕ КНОПКА СОХРАНЕНИЯ ДЛЯ ЛАЗЕРНОГО ПРИНТЕРА________________________________________________
     /**
-     * В РАЗРАБОТКЕ
+     * В РАЗРАБОТКЕ КНОПКА СОХРАНЕНИЯ ДАННЫХ ДЛЯ ЛАЗЕРНЫХ ПРИНТЕРОВ
      */
     private void onLaserSaveData() {
         //Заблокировали кнопку
@@ -263,13 +236,15 @@ public class MainForm extends JFrame {
                 System.out.println("PRESS BUTTON 1");
                 String textFromField = leftPathTextField.getText();
                 laserPrinterService.parseTxtFileStatisticsLaserPrinter(textFromField);
+                System.out.println("Файлы добавлены в БД");
                 return "";  // фоновый поток
             }
             @Override
             protected void done() {
                 setBusy(false);
                 try {
-                    System.out.println("PIZDOS");
+                    // метод get() - вернет результат работы в методе doInBackground()
+                    System.out.println("done() = выводить результат на панель");
                 }             // EDT
                 catch (Exception ex) { /* ... */ }
             }
@@ -312,9 +287,11 @@ public class MainForm extends JFrame {
         return mainJPanel;
     }
 
+
     private void createUIComponents() {
         // TODO: place custom component creation code here
     }
+
 
     private void getStatFromPlotter() {
         plotterButtonGetInfoFromDB.addActionListener(new ActionListener() {
@@ -326,6 +303,40 @@ public class MainForm extends JFrame {
     }
 
 
+
+
+
+
+
+//-------------------------КНОПКА СОХРАНИТЬ ПАРСИНГ ОТЧЕТА ПЛОТТЕРА
+
+    private void onPlotterSaveData() {
+        //Заблокировали кнопку
+//        setBusy(true);
+
+        new SwingWorker<String, Void>() {
+            @Override
+            protected String doInBackground() throws Exception {
+                //вызываем сервис -> затем DAO -> Возвращаем данные
+                System.out.println("Нажатие на кнопку SavePlotterData");
+                String date = plotterGetDatePeriodTextField.getText();
+                plotterService.
+
+                return "";  // фоновый поток
+            }
+            @Override
+            protected void done() {
+                setBusy(false);
+                try {
+                    // метод get() - вернет результат работы в методе doInBackground()
+
+                }             // EDT
+                catch (Exception ex) { /* ... */ }
+            }
+        }.execute();
+    }
+
+//-----------------------------------------------------------------
 
 
 

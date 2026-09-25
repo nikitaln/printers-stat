@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainFormService {
+public class DateService {
 
     //обработка ошибок с вводом даты
     //подготовка готового результата для вывода в TextArea

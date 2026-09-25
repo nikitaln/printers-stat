@@ -10,87 +10,47 @@ import java.util.List;
 
 public class TaskLaserPrinterDao {
 
-    private final DbConnection conn;
+    private final Connection conn;
 
-    public TaskLaserPrinterDao(DbConnection conn) {
+    public TaskLaserPrinterDao(Connection conn) {
         this.conn = conn;
     }
 
 
     // ГОТОВ
-    public void createTableForLaserPrinter() {
+//    public void createTableForLaserPrinter() {
+//
+//        //запрос на создание таблицы
+//        String SQL = "CREATE TABLE laser_stat( " +
+//                " id INT not NULL AUTO_INCREMENT, " +
+//                " dateTime DATETIME, " +
+//                " fileName VARCHAR (250), " +
+//                " printStatus VARCHAR (250), " +
+//                " countPages LONG, " +
+//                " format VARCHAR (250), " +
+//                " username VARCHAR (250), " +
+//                " printerName VARCHAR (250), " +
+//                " PRIMARY KEY(id));";
+//
+//        try {
+//            Statement statement = conn.getConnection().createStatement();
+//            statement.executeUpdate(SQL);
+//            System.out.println("Table successfully created...");
+//            statement.close();
+//            conn.closeConnection();
+//
+//
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
-        //запрос на создание таблицы
-        String SQL = "CREATE TABLE laser_stat( " +
-                " id INT not NULL AUTO_INCREMENT, " +
-                " dateTime DATETIME, " +
-                " fileName VARCHAR (250), " +
-                " printStatus VARCHAR (250), " +
-                " countPages LONG, " +
-                " format VARCHAR (250), " +
-                " username VARCHAR (250), " +
-                " printerName VARCHAR (250), " +
-                " PRIMARY KEY(id));";
-
-        try {
-            Statement statement = conn.getConnection().createStatement();
-            statement.executeUpdate(SQL);
-            System.out.println("Table successfully created...");
-            statement.close();
-            conn.closeConnection();
-
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    // ГОТОВ
-    public void addAllTaskLaserPrinterToDataBse(List<TaskLaserPrinter> taskLaserPrinterList) {
-        StringBuilder sqlStringBuilder = new StringBuilder();
-
-        for (TaskLaserPrinter taskLaserPrinter : taskLaserPrinterList) {
-            sqlStringBuilder.append("('" +
-                    taskLaserPrinter.getDateTime() + "', '" +
-                    taskLaserPrinter.getName() + "', '" +
-                    taskLaserPrinter.getStatus() + "', '" +
-                    taskLaserPrinter.getFormat() + "', '" +
-                    taskLaserPrinter.getCountPage() + "', '" +
-                    taskLaserPrinter.getUsername() + "', '" +
-                    taskLaserPrinter.getPrinter() + "'), ");
-        }
-
-        String sql = sqlStringBuilder.toString();
-        int lastIndex = sql.length();
-        String sql2 = sql.substring(0, lastIndex - 2);
-        String sqlFinal = sql2 + ";";
-
-        System.out.println(sql2);
-
-        try {
-            Statement statement = conn.getConnection().createStatement();
-            statement.executeUpdate("INSERT INTO laser_stat(" +
-                    " dateTime," +
-                    " fileName," +
-                    " printStatus," +
-                    " format," +
-                    " countPages," +
-                    " username," +
-                    " printerName) VALUES" + sqlFinal);
-
-            System.out.println("таблица laser_stat заполнена");
-            statement.close();
-            conn.closeConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     // ГОТОВ
     public void addTaskLaserPrinter(TaskLaserPrinter task) {
 
         try {
-            Statement statement = conn.getConnection().createStatement();
+            Statement statement = conn.createStatement();
 
             statement.executeUpdate("INSERT INTO laserPrinterStat(" +
                     " dateTime, fileName, printStatus, format, countPages, username, printerName) " +
@@ -105,7 +65,7 @@ public class TaskLaserPrinterDao {
             );
 
             statement.close();
-            conn.closeConnection();
+            conn.close();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -120,7 +80,7 @@ public class TaskLaserPrinterDao {
                 "LIMIT 1;";
 
         try {
-            PreparedStatement preparedStatement = conn.getConnection().prepareStatement(sql);
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             String lastDate = "";
@@ -131,7 +91,7 @@ public class TaskLaserPrinterDao {
 
             preparedStatement.close();
             resultSet.close();
-            conn.closeConnection();
+            conn.close();
             return lastDate;
 
         } catch (SQLException e) {
@@ -161,7 +121,7 @@ public class TaskLaserPrinterDao {
 
 
         try {
-            PreparedStatement preparedStatement = conn.getConnection().prepareStatement(sqlFormatA4);
+            PreparedStatement preparedStatement = conn.prepareStatement(sqlFormatA4);
             ResultSet resultSet = preparedStatement.executeQuery();
 
 
@@ -172,7 +132,7 @@ public class TaskLaserPrinterDao {
 
             preparedStatement.close();
             resultSet.close();
-            conn.closeConnection();
+            conn.close();
             return A4result;
 
         } catch (SQLException e) {
@@ -202,7 +162,7 @@ public class TaskLaserPrinterDao {
 
 
         try {
-            PreparedStatement preparedStatement = conn.getConnection().prepareStatement(sqlFormatA3);
+            PreparedStatement preparedStatement = conn.prepareStatement(sqlFormatA3);
             ResultSet resultSet = preparedStatement.executeQuery();
 
 
@@ -213,7 +173,7 @@ public class TaskLaserPrinterDao {
 
             preparedStatement.close();
             resultSet.close();
-            conn.closeConnection();
+            conn.close();
             return A3result;
 
         } catch (SQLException e) {
@@ -242,7 +202,7 @@ public class TaskLaserPrinterDao {
                 "`fileName` LIKE '%Плотная%';";
 
         try {
-            PreparedStatement preparedStatement = conn.getConnection().prepareStatement(sqlFormatA3);
+            PreparedStatement preparedStatement = conn.prepareStatement(sqlFormatA3);
             ResultSet resultSet = preparedStatement.executeQuery();
 
 
@@ -253,7 +213,7 @@ public class TaskLaserPrinterDao {
 
             preparedStatement.close();
             resultSet.close();
-            conn.closeConnection();
+            conn.close();
             return A3result;
 
         } catch (SQLException e) {
@@ -282,7 +242,7 @@ public class TaskLaserPrinterDao {
 
 
         try {
-            PreparedStatement preparedStatement = conn.getConnection().prepareStatement(sqlFormatA3);
+            PreparedStatement preparedStatement = conn.prepareStatement(sqlFormatA3);
             ResultSet resultSet = preparedStatement.executeQuery();
 
 
@@ -293,7 +253,7 @@ public class TaskLaserPrinterDao {
 
             preparedStatement.close();
             resultSet.close();
-            conn.closeConnection();
+            conn.close();
             return A3result;
 
         } catch (SQLException e) {
@@ -324,7 +284,7 @@ public class TaskLaserPrinterDao {
                 "`dateTime` < '" + endDate + "';";
 
         try {
-            PreparedStatement preparedStatement = conn.getConnection().prepareStatement(sqlFormatA3);
+            PreparedStatement preparedStatement = conn.prepareStatement(sqlFormatA3);
             ResultSet resultSet = preparedStatement.executeQuery();
 
 
@@ -335,7 +295,7 @@ public class TaskLaserPrinterDao {
 
             preparedStatement.close();
             resultSet.close();
-            conn.closeConnection();
+            conn.close();
             return filesCount;
 
         } catch (SQLException e) {
@@ -361,7 +321,7 @@ public class TaskLaserPrinterDao {
                 "`dateTime` < '" + endDate + "';";
 
         try {
-            PreparedStatement preparedStatement = conn.getConnection().prepareStatement(sqlFormatA3);
+            PreparedStatement preparedStatement = conn.prepareStatement(sqlFormatA3);
             ResultSet resultSet = preparedStatement.executeQuery();
 
 
@@ -372,7 +332,7 @@ public class TaskLaserPrinterDao {
 
             preparedStatement.close();
             resultSet.close();
-            conn.closeConnection();
+            conn.close();
             return filesCount;
 
         } catch (SQLException e) {
@@ -403,7 +363,7 @@ public class TaskLaserPrinterDao {
 
 
         try {
-            PreparedStatement preparedStatement = conn.getConnection().prepareStatement(sqlFormatA4);
+            PreparedStatement preparedStatement = conn.prepareStatement(sqlFormatA4);
             ResultSet resultSet = preparedStatement.executeQuery();
 
 
@@ -414,7 +374,7 @@ public class TaskLaserPrinterDao {
 
             preparedStatement.close();
             resultSet.close();
-            conn.getConnection();
+            conn.close();
             return A4result;
 
         } catch (SQLException e) {
@@ -444,7 +404,7 @@ public class TaskLaserPrinterDao {
                 "`fileName` LIKE '%Обычная%';";
 
         try {
-            PreparedStatement preparedStatement = conn.getConnection().prepareStatement(sqlFormatA3);
+            PreparedStatement preparedStatement = conn.prepareStatement(sqlFormatA3);
             ResultSet resultSet = preparedStatement.executeQuery();
 
 
@@ -455,7 +415,7 @@ public class TaskLaserPrinterDao {
 
             preparedStatement.close();
             resultSet.close();
-            conn.closeConnection();
+            conn.close();
             return A3result;
 
         } catch (SQLException e) {
@@ -486,7 +446,7 @@ public class TaskLaserPrinterDao {
 
 
         try {
-            PreparedStatement preparedStatement = conn.getConnection().prepareStatement(sqlFormatA3);
+            PreparedStatement preparedStatement = conn.prepareStatement(sqlFormatA3);
             ResultSet resultSet = preparedStatement.executeQuery();
 
 
@@ -497,7 +457,7 @@ public class TaskLaserPrinterDao {
 
             preparedStatement.close();
             resultSet.close();
-            conn.closeConnection();
+            conn.close();
             return A3result;
 
         } catch (SQLException e) {
@@ -506,4 +466,34 @@ public class TaskLaserPrinterDao {
     }
 
 
+    public void addAllTaskLaserPrinterToDataBse(List<TaskLaserPrinter> taskLaserPrinterList) {
+        System.out.println("Вход в новый метод с PrepareStatement = 1");
+        String sql = "INSERT INTO laser_stat(dateTime, fileName, printStatus, " +
+                "format, countPages, username, printerName) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        System.out.println("Вход цикл с PrepareStatement = 2");
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            for (TaskLaserPrinter t : taskLaserPrinterList) {
+                ps.setObject(1, t.getDateTime());
+                ps.setString(2, t.getName());
+                ps.setString(3, t.getStatus());
+                ps.setString(4, t.getFormat());
+                ps.setInt(5, (int) t.getCountPage());
+                ps.setString(6, t.getUsername());
+                ps.setString(7, t.getPrinter());
+                ps.addBatch();  // ← накопление
+
+                int batchCount = 0;
+
+                if (batchCount++ % 1000 == 0) {
+                    ps.executeBatch();  // ← отправка пачки
+                }
+            }
+            ps.executeBatch();  // остаток
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("Таблица заполнена с PrepareStatement = 3");
+    }
 }
