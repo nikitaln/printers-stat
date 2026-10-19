@@ -19,6 +19,7 @@ public class TaskPlotter {
     private String user;
     private LocalDateTime dateTime;
     private String printType;
+    private String printerName;
 
 
     public int getId() {
@@ -133,10 +134,19 @@ public class TaskPlotter {
         this.printType = printType;
     }
 
+    public String getPrinterName() {
+        return printerName;
+    }
+
+    public void setPrinterName(String printerName) {
+        this.printerName = printerName;
+    }
+
     @Override
     public String toString() {
         return "TaskPlotter{" +
-                "taskName='" + taskName + '\'' +
+                "id=" + id +
+                ", taskName='" + taskName + '\'' +
                 ", taskType='" + taskType + '\'' +
                 ", source='" + source + '\'' +
                 ", output='" + output + '\'' +
@@ -149,7 +159,7 @@ public class TaskPlotter {
                 ", user='" + user + '\'' +
                 ", dateTime=" + dateTime +
                 ", printType='" + printType + '\'' +
+                ", printerName='" + printerName + '\'' +
                 '}';
     }
-
 }

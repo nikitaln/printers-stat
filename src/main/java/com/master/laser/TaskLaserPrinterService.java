@@ -197,4 +197,9 @@ public class TaskLaserPrinterService {
         return sumA4Format;
     }
 
+
+    public String getLastDateForDisplay() {
+        return taskLaserPrinterDao.getLastDateTime();
+    }
+
 }

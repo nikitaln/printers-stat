@@ -86,12 +86,11 @@ public class TaskLaserPrinterDao {
             String lastDate = "";
             while (resultSet.next()) {
                 lastDate = resultSet.getString("dateTime");
-                System.out.println("last date = " + lastDate);
+                System.out.println("laser = " + lastDate);
             }
 
             preparedStatement.close();
             resultSet.close();
-            conn.close();
             return lastDate;
 
         } catch (SQLException e) {

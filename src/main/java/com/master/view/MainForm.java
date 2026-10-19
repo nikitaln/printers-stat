@@ -2,16 +2,12 @@ package com.master.view;
 
 import com.master.gui.DateService;
 import com.master.laser.TaskLaserPrinterService;
-import com.master.plotter.TaskPlotterDBConnection;
 import com.master.plotter.TaskPlotterService;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainForm extends JFrame {
 
@@ -23,7 +19,7 @@ public class MainForm extends JFrame {
     private JTextField leftDatePeriodTextField;
     private JTextField plotterGetDatePeriodTextField;
     private JLabel rightPanelMainLabel;
-    private JLabel plotterDateLabel;
+    private JLabel plotterSelectLabel;
     private JButton laserButtonSaveInfoToDB;
     private JButton plotterSaveStatisticsButton;
     private JTextArea laserStatisticsTextArea;
@@ -48,22 +44,18 @@ public class MainForm extends JFrame {
     private JTextField plotterLastDateTextField;
     private JLabel plotterLabelLastDate;
     private JComboBox comboBox1;
-    private JComboBox comboBoxSelectPlotter;
+    private JComboBox comboBox2;
+    private JLabel plotterDateLabel;
 
     private DateService mainFormService;
 
-    //--------------------------------------------------
     private TaskLaserPrinterService laserPrinterService;
     private TaskPlotterService plotterService;
 
-
-
+    //Конструктор
     public MainForm(TaskLaserPrinterService laserPrinterService, TaskPlotterService plotterService) {
         this.laserPrinterService = laserPrinterService;
         this.plotterService = plotterService;
-
-        mainFormService = new DateService();
-
 
         //1. рисуем окно с пустыми/placeholder-значениями
         initUI();
@@ -75,75 +67,10 @@ public class MainForm extends JFrame {
         //3. грузим данные из БД асинхронно, ПОСЛЕ отрисовки
         loadInitialData();
 
-
-//        //вывод последней даты отчета для Лазерного принтера
-//        laserTextFieldLastDate.setText(laserPrinterDBConnection.getLastDateTime());
-//
-//
-//        //вывод последней даты отчета для Плоттера
-//        plotterLastDateTextField.setText(taskPlotterDBConnection.getLastDateTime());
-
         initComboBox();
+        initComboBox2();
 
 
-        //кнопка парсинга web-страницы отчетом
-        /**
-         * TODO: по нажатию кнопки сканировать страницу и добавлять не достающие отчеты
-         */
-        plotterSaveStatisticsButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String date = plotterGetDatePeriodTextField.getText();
-                if (mainFormService.isCorrectDateFormat(date)) {
-
-                    if (!mainFormService.isOneDay(date)) {
-                        List<LocalDate> dateList = mainFormService.getAllDaysBetweenTwoDates(date);
-                        plotterService.parseWebPrinterStatistics(dateList);
-                    } else {
-                        List<LocalDate> dateListWithOneDate = new ArrayList<>();
-                        dateListWithOneDate.add(mainFormService.getLocalDateFromString(date));
-                        plotterService.parseWebPrinterStatistics(dateListWithOneDate);
-                    }
-                }
-
-                plotterService.printAllTasks();
-                dbConnection.getConnection();
-                dbConnection.addAllTaskPlotter(plotterService.getAllTasks());
-
-                plotterLastDateTextField.setText(taskPlotterDBConnection.getLastDateTime());
-
-                resultLabel.setForeground(Color.GREEN);
-                resultLabel.setText("Выполнено");
-            }
-        });
-
-
-        //получение статистики по печати на плоттере за период
-        /**
-         * TODO: доделать возможность отчета за 1 день + тестирование
-         */
-//        plotterButtonGetInfoFromDB.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                System.out.println("НАЖАЛИ BUTTON");
-//                String datePeriod = plotterDatePeriodTextField.getText();
-//                plotterStatisticsTextArea.setText(
-//                        "отчет за период: " + datePeriod + "\n\n" +
-//                                "Обычная = " + taskPlotterDBConnection.getCountOfThinPaperForPeriod(datePeriod) + " м.\n" +
-//                                "Плотная = " + taskPlotterDBConnection.getCountOfHeavyPaperForPeriod(datePeriod) + " м.\n" +
-//                                "Самоклейка = " + taskPlotterDBConnection.getCountOfAdhesivePaperForPeriod(datePeriod) + " м.\n" +
-//                                "Кол-во файлов = " + taskPlotterDBConnection.getSumFiles(datePeriod) + " шт.");
-//
-//            }
-//        });
-
-
-
-        //получение статистики по печати на лазерных принтерах
-        /**
-         * Доделать кнопку
-         */
 //        laserGetStatisticsFromDB.addActionListener(new ActionListener() {
 //            @Override
 //            public void actionPerformed(ActionEvent e) {
@@ -190,11 +117,11 @@ public class MainForm extends JFrame {
 //            }
 //        });
 
-
         getStatFromPlotter();
     }
 
 
+    //1. инициализация фрейм
     private void initUI() {
         setSize(900, 600);
         setTitle("Статистика печати на принтерах");
@@ -209,7 +136,8 @@ public class MainForm extends JFrame {
 
     }
 
-    //обрабатываем события нажатий
+
+    //2. обрабатываем события нажатий
     private void initListeners() {
         //1. сохранить данные в БД для лазера
         laserButtonSaveInfoToDB.addActionListener(e -> onLaserSaveData());
@@ -221,10 +149,41 @@ public class MainForm extends JFrame {
        //plotterButtonGetInfoFromDB.addActionListener();
     }
 
-//_________________В РАЗРАБОТКЕ КНОПКА СОХРАНЕНИЯ ДЛЯ ЛАЗЕРНОГО ПРИНТЕРА________________________________________________
-    /**
-     * В РАЗРАБОТКЕ КНОПКА СОХРАНЕНИЯ ДАННЫХ ДЛЯ ЛАЗЕРНЫХ ПРИНТЕРОВ
-     */
+
+    //3. загрузка данных из БД
+    private void loadInitialData() {
+
+        new SwingWorker<LastDates, Void>() {
+
+            @Override
+            protected LastDates doInBackground() throws Exception {
+                // ФОНОВЫЙ ПОТОК: оба запроса последовательно
+                String laserDate = laserPrinterService.getLastDateForDisplay();
+                String plotterDate = plotterService.getPlotterLastDateForDisplay();
+                return new LastDates(laserDate, plotterDate);
+            }
+
+            @Override
+            protected void done() {
+                // EDT: обновляем UI
+                try {
+                    LastDates data = get();
+                    System.out.println(data.plotterDate);
+                    laserTextFieldLastDate.setText(data.laserDate());
+                    plotterLastDateTextField.setText(data.plotterDate());
+                } catch (Exception ex) {
+                    laserTextFieldLastDate.setText("ошибка загрузки");
+                    plotterLastDateTextField.setText("ошибка загрузки");
+                    showError("Не удалось загрузить данные: " + ex.getMessage());
+                }
+            }
+        }.execute();
+
+    }
+
+
+
+
     private void onLaserSaveData() {
         //Заблокировали кнопку
         setBusy(true);
@@ -251,20 +210,15 @@ public class MainForm extends JFrame {
         }.execute();
     }
 
-
     //Блокировка кнопки на время выполнения команды
     private void setBusy(boolean busy) {
         laserButtonSaveInfoToDB.setEnabled(!busy);
     }
 
-//___________________НЕ ТРОГАТЬ_________________________________________________________________________________________
-
-    private void loadInitialData() {
-
+    private void showError(String s) {
     }
 
     public void initComboBox() {
-
 
         System.out.println("initComboBox");
         comboBox1.addItem("Все");
@@ -282,16 +236,19 @@ public class MainForm extends JFrame {
         });
     }
 
+    public void initComboBox2() {
+        comboBox2.addItem("XL8000 (2017)");
+        comboBox2.addItem("XL8000 (2021)");
+        comboBox2.addItem("XL5100 (2018)");
+    }
 
     public JPanel getMainJPanel() {
         return mainJPanel;
     }
 
-
     private void createUIComponents() {
         // TODO: place custom component creation code here
     }
-
 
     private void getStatFromPlotter() {
         plotterButtonGetInfoFromDB.addActionListener(new ActionListener() {
@@ -301,14 +258,6 @@ public class MainForm extends JFrame {
             }
         });
     }
-
-
-
-
-
-
-
-//-------------------------КНОПКА СОХРАНИТЬ ПАРСИНГ ОТЧЕТА ПЛОТТЕРА
 
     private void onPlotterSaveData() {
         //Заблокировали кнопку
@@ -320,8 +269,10 @@ public class MainForm extends JFrame {
                 //вызываем сервис -> затем DAO -> Возвращаем данные
                 System.out.println("Нажатие на кнопку SavePlotterData");
                 String date = plotterGetDatePeriodTextField.getText();
-                plotterService.
-
+                int plotterName = comboBox2.getSelectedIndex();
+                System.out.println(plotterName);
+                System.out.println(date);
+                plotterService.parseWebPageAndCheckData(date, plotterName);
                 return "";  // фоновый поток
             }
             @Override
@@ -329,16 +280,17 @@ public class MainForm extends JFrame {
                 setBusy(false);
                 try {
                     // метод get() - вернет результат работы в методе doInBackground()
-
+                    resultLabel.setForeground(Color.GREEN);
+                    resultLabel.setText("Выполнено");
                 }             // EDT
                 catch (Exception ex) { /* ... */ }
             }
         }.execute();
     }
 
-//-----------------------------------------------------------------
-
-
+    private record LastDates(String laserDate, String plotterDate) {
+        
+    }
 
 
 }

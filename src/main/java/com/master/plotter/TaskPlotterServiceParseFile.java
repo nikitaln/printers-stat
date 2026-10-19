@@ -12,7 +12,6 @@ import java.util.List;
 public class TaskPlotterServiceParseFile {
 
     TaskPlotterStorage taskPlotterStorage;
-    TaskPlotterDBConnection dbConnection;
 
 
     private String path = "C:\\Users\\lukanin_ns\\Downloads\\hp8000\\test.txt";
@@ -42,12 +41,6 @@ public class TaskPlotterServiceParseFile {
                             createTaskPlotter(fragments));
                 }
             }
-
-            dbConnection = new TaskPlotterDBConnection();
-            dbConnection.getConnection();
-            dbConnection.createTable();
-            dbConnection.addAllTaskPlotter(taskPlotterStorage.getAllPlotterTasks());
-
 
             System.out.println("данные сохранены в БД");
 

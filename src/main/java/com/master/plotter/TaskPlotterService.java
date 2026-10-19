@@ -1,16 +1,19 @@
 package com.master.plotter;
 
 import com.master.dao.TaskPlotterDao;
+import com.master.gui.DateService;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -24,18 +27,68 @@ public class TaskPlotterService {
         this.plotterDao = plotterDao;
     }
 
-    //    private String path = "http://npic5e08b/hp/device/webAccess/index.htm;jsessionid=blir95p7c1?content=accounting";    //старый PageWide
-    //    private String path = "http://npi477340/hp/device/webAccess/index.htm;jsessionid=dp01bpqil1?content=accounting";    //новый PageWide
-    private String path = "http://172.20.51.135/hp/device/webAccess/index.htm;jsessionid=t7e4p68mi1?content=accounting";    //PageWide5100
+
+    private String pathXL8000_2017_0 = "http://npic5e08b/hp/device/webAccess/index.htm;jsessionid=blir95p7c1?content=accounting";    //старый PageWide
+    private String pathXL8000_2021_1 = "http://npi477340/hp/device/webAccess/index.htm;jsessionid=dp01bpqil1?content=accounting";    //новый PageWide
+    private String pathXL5100_2018_2 = "http://172.20.51.135/hp/device/webAccess/index.htm;jsessionid=t7e4p68mi1?content=accounting";    //PageWide5100
+
+
+    //Первый метод (работа с датой)
+    public void parseWebPageAndCheckData(String dateTime, int numOfPrinter) {
+        System.out.println("проверка даты 1");
+        DateService dateService = new DateService();
+        int numPrinter = numOfPrinter;
+        String namePrinter = getNamePrinter(numPrinter);
+        String pathWeb = getPathWebPrinter(numPrinter);
+
+        String date = dateTime;
+        if (dateService.isCorrectDateFormat(date)) {
+            System.out.println("проверка даты 2");
+            if (!dateService.isOneDay(date)) {
+                System.out.println("проверка даты 3");
+                List<LocalDate> dateList = dateService.getAllDaysBetweenTwoDates(date);
+                parseWebPrinterStatistics(dateList, pathWeb, namePrinter); //парсинг списка дней
+            } else {
+                System.out.println("проверка даты 4");
+                List<LocalDate> dateListWithOneDate = new ArrayList<>();
+                dateListWithOneDate.add(dateService.getLocalDateFromString(date));
+                parseWebPrinterStatistics(dateListWithOneDate, pathWeb, namePrinter); //парсинг одного дня
+            }
+        }
+        System.out.println("завершение проверки даты 6");
+        System.out.println();
+        System.out.println("Можно добавлять данные в БД");
+        plotterDao.addAllTaskPlotter(getAllTasks());
+    }
+
+
+    private String getNamePrinter(int numPrinter) {
+        if (numPrinter == 0) {
+            return "XL8000 2017";
+        } else if (numPrinter == 1) {
+            return "XL8000 2021";
+        } else return "XL5100 2018";
+    }
+
+
+    private String getPathWebPrinter(int numPrinter) {
+        if (numPrinter == 0) {
+            return pathXL8000_2017_0;
+        } else if (numPrinter == 1) {
+            return pathXL8000_2021_1;
+        } else return pathXL5100_2018_2;
+    }
 
 
     //парсинг веб-страницы HP
-    public void parseWebPrinterStatistics(List<LocalDate> dates) {
+    private void parseWebPrinterStatistics(List<LocalDate> dates, String pathWebPrinter, String nameOfPrinter) {
+
+        System.out.println("парсинг старт 7");
 
         taskPlotterStorage = new TaskPlotterStorage();
 
         Connection connection = Jsoup
-                .connect(path)
+                .connect(pathWebPrinter)
                 .maxBodySize(Integer.MAX_VALUE);
 
         try {
@@ -53,15 +106,12 @@ public class TaskPlotterService {
                 if (isEqualInputUserDate(getLocalDateTimeFromString(cols.get(16).text()), dates)) {
 
                     System.out.println(cols.get(0).text()); //имя файла
-                    taskPlotterStorage.addTaskPlotter(createTaskPlotterObject(cols));
+                    taskPlotterStorage.addTaskPlotter(createTaskPlotterObject(cols, nameOfPrinter));
 
                 }
             }
 
             taskPlotterStorage.printAllTaskPlotter();
-//            taskPlotterDBConnection = new TaskPlotterDBConnection();
-//            taskPlotterDBConnection.createTable();
-//            taskPlotterDBConnection.addAllTaskPlotter(taskPlotterStorage.getAllPlotterTasks());
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -70,7 +120,7 @@ public class TaskPlotterService {
 
 
 
-    private TaskPlotter createTaskPlotterObject(Elements cols) {
+    private TaskPlotter createTaskPlotterObject(Elements cols, String namePrinter) {
 
         taskPlotter = new TaskPlotter();
         taskPlotter.setTaskName(cols.get(0).text());
@@ -93,6 +143,7 @@ public class TaskPlotterService {
         taskPlotter.setDateTime(
                 getLocalDateTimeFromString(cols.get(16).text()));
         taskPlotter.setPrintType(cols.get(17).text());
+        taskPlotter.setPrinterName(namePrinter);
 
         return taskPlotter;
     }
@@ -255,6 +306,14 @@ public class TaskPlotterService {
     public List<TaskPlotter> getAllTasks() {
         return taskPlotterStorage.getAllPlotterTasks();
     }
+
+
+    public String getPlotterLastDateForDisplay() {
+        return plotterDao.getLastDate();
+    }
+
+
+
 }
 
 //                System.out.println(cols.get(0).text()); //имя файла

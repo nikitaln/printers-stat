@@ -1,6 +1,6 @@
 package com.master.dao;
 
-import com.master.db.DbConnection;
+
 import com.master.plotter.TaskPlotter;
 
 import java.sql.*;
@@ -8,7 +8,6 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 public class TaskPlotterDao {
@@ -22,97 +21,95 @@ public class TaskPlotterDao {
 
     //ГОТОВ
     //создание таблица plotter_stat
-    public void createTable() {
-        String SQL = "CREATE TABLE plotter_stat( " +
-                " id INT not NULL AUTO_INCREMENT, " +
-                " taskName TEXT, " +
-                " taskType VARCHAR (250), " +
-                " source VARCHAR (250), " +
-                " output VARCHAR (250), " +
-                " status VARCHAR (250), " +
-                " copyCount INT, " +
-                " paperType VARCHAR (250), " +
-                " paperConsumption DOUBLE, " +
-                " paperLengthConsumption DOUBLE, " +
-                " tonerConsumption DOUBLE, " +
-                " user VARCHAR(250), "  +
-                " dateTime DATETIME, " +
-                " printType VARCHAR(250), " +
-                " PRIMARY KEY(id));";
-
-        try {
-            Statement statement = conn.createStatement();
-            statement.execute(SQL);
-            System.out.println("таблица plotter_stat создана");
-            statement.close();
-            conn.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-
-    }
+//    public void createTable() {
+//        String SQL = "CREATE TABLE plotter_stat( " +
+//                " id INT not NULL AUTO_INCREMENT, " +
+//                " taskName TEXT, " +
+//                " taskType VARCHAR (250), " +
+//                " source VARCHAR (250), " +
+//                " output VARCHAR (250), " +
+//                " status VARCHAR (250), " +
+//                " copyCount INT, " +
+//                " paperType VARCHAR (250), " +
+//                " paperConsumption DOUBLE, " +
+//                " paperLengthConsumption DOUBLE, " +
+//                " tonerConsumption DOUBLE, " +
+//                " user VARCHAR(250), "  +
+//                " dateTime DATETIME, " +
+//                " printType VARCHAR(250), " +
+//                " PRIMARY KEY(id));";
+//
+//        try {
+//            Statement statement = conn.createStatement();
+//            statement.execute(SQL);
+//            System.out.println("таблица plotter_stat создана");
+//            statement.close();
+//            conn.close();
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
 
 
     //ГОТОВ
     //добавление списка задач в таблицу plotter_stat
     public void addAllTaskPlotter(List<TaskPlotter> tasksPlotter) {
-        StringBuilder sqlStringBuilder = new StringBuilder();
-        List<TaskPlotter> onlyNewTask = new ArrayList<>();
+        System.out.println("зашли в метод add to DB 1 ");
 
-        for (TaskPlotter taskPlotter : tasksPlotter) {
-            if (!containsDateTime(taskPlotter.getDateTime())) {
-                onlyNewTask.add(taskPlotter);
+        if (tasksPlotter == null || tasksPlotter.isEmpty()) {
+            return;
+        }
+
+        System.out.println("не null не пустой 2 = " + tasksPlotter.size());
+
+        final String sql = "INSERT INTO plotter_stat(" +
+                "taskName, taskType, source, output, status, copyCount, " +
+                "paperType, paperConsumption, paperLengthConsumption, " +
+                "tonerConsumption, user, dateTime, printType, printerName) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"; // если БД поддерживает
+
+        System.out.println("Составили запрос 3");
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            int batchSize = 0;
+
+            for (TaskPlotter t : tasksPlotter) {
+
+                int i = 1;
+
+                ps.setString(i++, t.getTaskName());
+                ps.setString(i++, t.getTaskType());
+                ps.setString(i++, t.getSource());
+                ps.setString(i++, t.getOutput());
+                ps.setString(i++, t.getStatus());
+                ps.setInt   (i++, t.getCopyCount());
+                ps.setString(i++, t.getPaperType());
+                ps.setDouble(i++, t.getPaperConsumption());
+                ps.setDouble(i++, t.getPaperLengthConsumption());
+                ps.setDouble(i++, t.getTonerConsumption());
+                ps.setString(i++, t.getUser());
+                ps.setObject(i++, t.getDateTime()); // или setObject
+                ps.setString(i++, t.getPrintType());
+                ps.setString(i++, t.getPrinterName());
+                ps.addBatch();
+                batchSize++;
+
+                // сбрасываем батч каждые 500 записей
+                if (batchSize % 500 == 0) {
+                    ps.executeBatch();
+                    ps.clearBatch();
+                }
+                System.out.println("прошлись в цикле 4");
             }
-        }
 
+            if (batchSize % 500 != 0) {
+                ps.executeBatch();
+            }
 
-        for (TaskPlotter taskPlotter : onlyNewTask) {
-            sqlStringBuilder.append("('" +
-                    taskPlotter.getTaskName() + "', '" +
-                    taskPlotter.getTaskType() + "', '" +
-                    taskPlotter.getSource() + "', '" +
-                    taskPlotter.getOutput() + "', '" +
-                    taskPlotter.getStatus() + "', '" +
-                    taskPlotter.getCopyCount() + "', '" +
-                    taskPlotter.getPaperType() + "', '" +
-                    taskPlotter.getPaperConsumption() + "', '" +
-                    taskPlotter.getPaperLengthConsumption() + "', '" +
-                    taskPlotter.getTonerConsumption() + "', '" +
-                    taskPlotter.getUser() + "', '" +
-                    taskPlotter.getDateTime() + "', '" +
-                    taskPlotter.getPrintType() + "'), ");
-        }
-
-        String sql = sqlStringBuilder.toString();
-        int lastIndex = sql.length();
-        String sql2 = sql.substring(0, lastIndex - 2);
-        String sqlFinal = sql2 + ";";
-
-        System.out.println(sqlFinal);
-
-        try {
-            Statement statement = conn.createStatement();
-            statement.executeUpdate("INSERT INTO plotter_stat(" +
-                    " taskName,"  +
-                    " taskType," +
-                    " source," +
-                    " output," +
-                    " status," +
-                    " copyCount," +
-                    " paperType," +
-                    " paperConsumption," +
-                    " paperLengthConsumption," +
-                    " tonerConsumption," +
-                    " user," +
-                    " dateTime," +
-                    " printType) VALUES" + sqlFinal);
-            System.out.println("таблица plotter_stat заполнена");
-            statement.close();
-            conn.close();
+            System.out.println("Таблица plotter_stat заполнена. Добавлено: " + batchSize);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Ошибка вставки в plotter_stat", e);
         }
     }
 
@@ -254,7 +251,8 @@ public class TaskPlotterDao {
 
 
     //ГОТОВ
-    public String getLastDateTime() {
+    public String getLastDate() {
+
         String sql = "SELECT `dateTime` " +
                 "FROM `plotter_stat` " +
                 "ORDER BY `dateTime` DESC " +
@@ -262,17 +260,16 @@ public class TaskPlotterDao {
 
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            System.out.println("plotter loop");
             ResultSet resultSet = preparedStatement.executeQuery();
-
             String lastDate = "";
             while (resultSet.next()) {
-                lastDate = resultSet.getString("dateTime");
-                System.out.println("last date = " + lastDate);
-            }
 
+                lastDate = resultSet.getString("dateTime");
+                System.out.println("plotter DB=" + lastDate);
+            }
             preparedStatement.close();
             resultSet.close();
-            conn.close();
             return lastDate;
 
         } catch (SQLException e) {
